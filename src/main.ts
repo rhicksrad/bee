@@ -1,56 +1,208 @@
 import './style.css';
 
-const cats = [
+type RubyPhoto = {
+  src: string;
+  alt: string;
+  caption: string;
+};
+
+const rubyPhotos: RubyPhoto[] = [
   {
-    name: 'Mochi',
-    caption: 'Window watcher and sunbeam specialist.',
-    image:
-      'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1200&q=80'
+    src: '/image0 (2).jpeg',
+    alt: 'Ruby the Cat lounging with royal confidence',
+    caption: 'Queen Bee mode: activated.'
   },
   {
-    name: 'Pixel',
-    caption: 'Always ready for dramatic close-ups.',
-    image:
-      'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=1200&q=80'
+    src: '/image1.jpeg',
+    alt: 'Ruby the Cat showing her sweet noonie bee face',
+    caption: 'Noonie bee eyes that can get away with anything.'
   },
   {
-    name: 'Nimbus',
-    caption: 'Master of naps and soft-focus portraits.',
-    image:
-      'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&w=1200&q=80'
+    src: '/image2.jpeg',
+    alt: 'Ruby the Cat in a playful pose',
+    caption: 'Tiny paws, giant personality.'
   }
 ];
 
 const app = document.querySelector<HTMLDivElement>('#app');
 
-if (!app) {
-  throw new Error('App root not found');
-}
+if (!app) throw new Error('App root not found');
 
 app.innerHTML = `
   <main class="container">
     <header class="hero">
-      <p class="eyebrow">GitHub Pages + TypeScript</p>
-      <h1>Cat Photo Showcase</h1>
+      <p class="eyebrow">Ruby the Cat fan site</p>
+      <h1>Ruby the Cat 👑</h1>
       <p>
-        A lightweight starter shell to publish your best cat photography.
+        Welcome to the official corner of Ruby the Cat, aka <strong>Noonie Bee</strong>,
+        aka <strong>Queen Bee</strong>. A tiny legend with major main-character energy.
       </p>
     </header>
 
-    <section class="gallery" aria-label="Featured cat photos">
-      ${cats
+    <section class="gallery" aria-label="Ruby photo gallery">
+      ${rubyPhotos
         .map(
-          (cat) => `
+          (photo) => `
             <article class="card">
-              <img src="${cat.image}" alt="${cat.name} the cat" loading="lazy" />
+              <img src="${photo.src}" alt="${photo.alt}" loading="lazy" />
               <div class="card-body">
-                <h2>${cat.name}</h2>
-                <p>${cat.caption}</p>
+                <p>${photo.caption}</p>
               </div>
             </article>
           `
         )
         .join('')}
     </section>
+
+    <section class="game-wrap" aria-label="Flappy Ruby mini game">
+      <div class="game-head">
+        <h2>Flappy Ruby</h2>
+        <p>Press <kbd>Space</kbd> or click the canvas to flap. Dodge the treat towers.</p>
+      </div>
+      <canvas id="flappy" width="360" height="540" aria-label="Flappy Ruby game canvas"></canvas>
+      <div class="hud">
+        <span>Score: <strong id="score">0</strong></span>
+        <span>Best: <strong id="best">0</strong></span>
+      </div>
+    </section>
   </main>
 `;
+
+const canvas = document.querySelector<HTMLCanvasElement>('#flappy');
+const scoreEl = document.querySelector<HTMLElement>('#score');
+const bestEl = document.querySelector<HTMLElement>('#best');
+
+if (!canvas || !scoreEl || !bestEl) throw new Error('Game elements missing');
+
+const ctx = canvas.getContext('2d');
+if (!ctx) throw new Error('2D context unavailable');
+
+const rubySprite = new Image();
+rubySprite.src = '/image1.jpeg';
+
+const gravity = 0.35;
+const flapForce = -6.2;
+const pipeWidth = 62;
+const gapHeight = 140;
+const pipeSpeed = 2.2;
+
+let y = canvas.height / 2;
+let velocity = 0;
+let score = 0;
+let best = Number(localStorage.getItem('ruby-best') || 0);
+bestEl.textContent = String(best);
+let alive = true;
+
+const pipes: { x: number; gapTop: number; counted: boolean }[] = [];
+
+const reset = () => {
+  y = canvas.height / 2;
+  velocity = 0;
+  score = 0;
+  scoreEl.textContent = '0';
+  alive = true;
+  pipes.length = 0;
+};
+
+const flap = () => {
+  if (!alive) {
+    reset();
+    return;
+  }
+  velocity = flapForce;
+};
+
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    flap();
+  }
+});
+canvas.addEventListener('pointerdown', flap);
+
+let spawnTicker = 0;
+
+const loop = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fef3c7';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  spawnTicker += 1;
+  if (alive && spawnTicker > 90) {
+    spawnTicker = 0;
+    const minTop = 70;
+    const maxTop = canvas.height - gapHeight - 70;
+    const gapTop = Math.random() * (maxTop - minTop) + minTop;
+    pipes.push({ x: canvas.width, gapTop, counted: false });
+  }
+
+  for (let i = pipes.length - 1; i >= 0; i -= 1) {
+    const pipe = pipes[i];
+    pipe.x -= pipeSpeed;
+
+    ctx.fillStyle = '#a16207';
+    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.gapTop);
+    ctx.fillRect(pipe.x, pipe.gapTop + gapHeight, pipeWidth, canvas.height - (pipe.gapTop + gapHeight));
+
+    if (!pipe.counted && pipe.x + pipeWidth < 80) {
+      pipe.counted = true;
+      score += 1;
+      scoreEl.textContent = String(score);
+      if (score > best) {
+        best = score;
+        localStorage.setItem('ruby-best', String(best));
+        bestEl.textContent = String(best);
+      }
+    }
+
+    if (pipe.x + pipeWidth < 0) pipes.splice(i, 1);
+
+    const rubyLeft = 46;
+    const rubyRight = rubyLeft + 64;
+    const rubyTop = y - 30;
+    const rubyBottom = y + 30;
+
+    const withinX = rubyRight > pipe.x && rubyLeft < pipe.x + pipeWidth;
+    const hitTop = rubyTop < pipe.gapTop;
+    const hitBottom = rubyBottom > pipe.gapTop + gapHeight;
+
+    if (alive && withinX && (hitTop || hitBottom)) alive = false;
+  }
+
+  if (alive) {
+    velocity += gravity;
+    y += velocity;
+  }
+
+  if (y > canvas.height - 20 || y < 20) alive = false;
+
+  if (rubySprite.complete) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(78, y, 30, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(rubySprite, 46, y - 30, 64, 64);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = '#111827';
+    ctx.beginPath();
+    ctx.arc(78, y, 22, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (!alive) {
+    ctx.fillStyle = 'rgba(17, 24, 39, 0.68)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '700 28px Inter, sans-serif';
+    ctx.fillText('Boop! Game Over', 88, 220);
+    ctx.font = '500 16px Inter, sans-serif';
+    ctx.fillText('Press Space or tap to restart', 87, 255);
+  }
+
+  requestAnimationFrame(loop);
+};
+
+rubySprite.onload = () => requestAnimationFrame(loop);
+if (rubySprite.complete) requestAnimationFrame(loop);
