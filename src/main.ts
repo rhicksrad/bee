@@ -84,11 +84,11 @@ if (!ctx) throw new Error('2D context unavailable');
 const rubySprite = new Image();
 rubySprite.src = image1;
 
-const gravity = 0.35;
-const flapForce = -6.2;
+const gravity = 0.28;
+const flapForce = -5.6;
 const pipeWidth = 62;
-const gapHeight = 140;
-const pipeSpeed = 2.2;
+const gapHeight = 180;
+const pipeSpeed = 1.8;
 
 let y = canvas.height / 2;
 let velocity = 0;
@@ -132,7 +132,7 @@ const loop = () => {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   spawnTicker += 1;
-  if (alive && spawnTicker > 90) {
+  if (alive && spawnTicker > 110) {
     spawnTicker = 0;
     const minTop = 70;
     const maxTop = canvas.height - gapHeight - 70;
@@ -161,10 +161,10 @@ const loop = () => {
 
     if (pipe.x + pipeWidth < 0) pipes.splice(i, 1);
 
-    const rubyLeft = 46;
-    const rubyRight = rubyLeft + 64;
-    const rubyTop = y - 30;
-    const rubyBottom = y + 30;
+    const rubyLeft = 54;
+    const rubyRight = rubyLeft + 44;
+    const rubyTop = y - 22;
+    const rubyBottom = y + 22;
 
     const withinX = rubyRight > pipe.x && rubyLeft < pipe.x + pipeWidth;
     const hitTop = rubyTop < pipe.gapTop;
@@ -178,7 +178,7 @@ const loop = () => {
     y += velocity;
   }
 
-  if (y > canvas.height - 20 || y < 20) alive = false;
+  if (y > canvas.height - 24 || y < 24) alive = false;
 
   if (rubySprite.complete) {
     ctx.save();
