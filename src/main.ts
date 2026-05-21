@@ -1,5 +1,9 @@
 import './style.css';
 
+import image0 from '../image0 (2).jpeg';
+import image1 from '../image1.jpeg';
+import image2 from '../image2.jpeg';
+
 type RubyPhoto = {
   src: string;
   alt: string;
@@ -8,17 +12,17 @@ type RubyPhoto = {
 
 const rubyPhotos: RubyPhoto[] = [
   {
-    src: '/image0 (2).jpeg',
+    src: image0,
     alt: 'Ruby the Cat lounging with royal confidence',
     caption: 'Queen Bee mode: activated.'
   },
   {
-    src: '/image1.jpeg',
+    src: image1,
     alt: 'Ruby the Cat showing her sweet noonie bee face',
     caption: 'Noonie bee eyes that can get away with anything.'
   },
   {
-    src: '/image2.jpeg',
+    src: image2,
     alt: 'Ruby the Cat in a playful pose',
     caption: 'Tiny paws, giant personality.'
   }
@@ -78,7 +82,7 @@ const ctx = canvas.getContext('2d');
 if (!ctx) throw new Error('2D context unavailable');
 
 const rubySprite = new Image();
-rubySprite.src = '/image1.jpeg';
+rubySprite.src = image1;
 
 const gravity = 0.35;
 const flapForce = -6.2;
