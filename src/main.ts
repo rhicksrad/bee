@@ -6,12 +6,18 @@ import image2 from '../image2.jpeg';
 import image3 from '../image3.jpeg';
 import image4 from '../image4.jpeg';
 import image5 from '../image5.jpeg';
+import image6 from '../image6.jpeg';
+import image7 from '../image7.jpeg';
+import image8 from '../image8.jpeg';
+import image9 from '../image9.jpeg';
+import image10 from '../image10.jpeg';
 
 type PetPhoto = {
   src: string;
   alt: string;
   caption: string;
   label: string;
+  feature: string;
 };
 
 const petPhotos: PetPhoto[] = [
@@ -19,37 +25,78 @@ const petPhotos: PetPhoto[] = [
     src: image0,
     alt: 'A peaceful companion pet resting in warm light',
     caption: 'A soft check-in moment for a beloved household companion.',
-    label: 'Calm Visit'
+    label: 'Calm Visit',
+    feature: 'Gentle bedside energy'
   },
   {
     src: image1,
     alt: 'A bright-eyed pet looking toward the camera',
     caption: 'Curious eyes, big feelings, and a tiny imaginary chart note.',
-    label: 'Curious Case'
+    label: 'Curious Case',
+    feature: 'Bright-eyed intake notes'
   },
   {
     src: image2,
     alt: 'A playful pet enjoying a lively moment',
     caption: 'Play is enrichment, exercise, comedy, and chaos in one package.',
-    label: 'Play Plan'
+    label: 'Play Plan',
+    feature: 'Movement and mischief'
   },
   {
     src: image3,
     alt: 'A relaxed pet lounging comfortably',
     caption: 'Rest, routine, and a cozy place to supervise the humans.',
-    label: 'Recovery Suite'
+    label: 'Recovery Suite',
+    feature: 'Quiet comfort rituals'
   },
   {
     src: image4,
     alt: 'An attentive pet watching from a favorite spot',
     caption: 'Alert, observant, and probably already aware of the treat drawer.',
-    label: 'Watchful Friend'
+    label: 'Watchful Friend',
+    feature: 'Treat-drawer surveillance'
   },
   {
     src: image5,
     alt: 'An elegant pet posing with confidence',
     caption: 'A polished portrait from the imaginary wellness wall of fame.',
-    label: 'Portrait Round'
+    label: 'Portrait Round',
+    feature: 'Wall-of-fame polish'
+  },
+  {
+    src: image6,
+    alt: 'A beloved pet captured for the rotating parlor gallery',
+    caption: 'Another little personality joins the orbit with storybook sparkle.',
+    label: 'New Arrival',
+    feature: 'Fresh patient spotlight'
+  },
+  {
+    src: image7,
+    alt: 'A companion animal featured in a warm veterinary-inspired slideshow',
+    caption: 'A bright carousel stop for soft paws, whiskers, and dramatic charm.',
+    label: 'Carousel Star',
+    feature: '3D gallery motion'
+  },
+  {
+    src: image8,
+    alt: 'A pet portrait added to the Persian parlor collection',
+    caption: 'Jewel tones, cozy light, and a little clinic-card glamour.',
+    label: 'Jewel Tone',
+    feature: 'Persian parlor styling'
+  },
+  {
+    src: image9,
+    alt: 'A household companion shown as part of the featured slideshow',
+    caption: 'A sweet reminder that every pet has a signature mood and mythos.',
+    label: 'Signature Mood',
+    feature: 'Animated feature card'
+  },
+  {
+    src: image10,
+    alt: 'A final pet portrait rounding out the rotating 3D gallery',
+    caption: 'The orbit closes with one more portrait from the imaginary rounds.',
+    label: 'Orbit Finale',
+    feature: 'Expanded image set'
   }
 ];
 
@@ -121,23 +168,47 @@ app.innerHTML = `
     </section>
 
     <section id="gallery" class="gallery-panel" aria-label="Pet photo gallery">
-      <div class="section-head">
+      <div class="section-head gallery-intro">
         <p class="kicker">Patient portraits</p>
-        <h2>Pets of the little Persian parlor</h2>
-        <p>Still starring the same repository photos, now framed as a broader collection of beloved pets and cozy companion moments.</p>
+        <h2>3D orbit of the little Persian parlor</h2>
+        <p>Images 6–10 now join the original root-gallery portraits in a rotating carousel with layered cards, featured traits, and jewel-box clinic styling.</p>
       </div>
-      <div class="gallery">
+      <div class="gallery-showcase">
+        <div class="carousel-stage" aria-label="Rotating 3D pet slideshow">
+          <div class="carousel-ring">
+            ${petPhotos
+              .map(
+                (photo, index) => `
+                  <article class="slide-card" style="--slide-index: ${index}; --slide-count: ${petPhotos.length};">
+                    <img src="${photo.src}" alt="${photo.alt}" loading="${index < 3 ? 'eager' : 'lazy'}" />
+                    <div class="slide-glass">
+                      <span>${photo.label}</span>
+                      <strong>${photo.feature}</strong>
+                    </div>
+                  </article>
+                `
+              )
+              .join('')}
+          </div>
+        </div>
+        <aside class="gallery-features" aria-label="Gallery features">
+          <span class="feature-pill">11 root images</span>
+          <span class="feature-pill">Images 6–10 integrated</span>
+          <span class="feature-pill">3D rotating slideshow</span>
+          <span class="feature-pill">Hover to pause</span>
+          <div class="feature-note">
+            <h3>Featured orbit notes</h3>
+            <p>The carousel keeps every patient portrait in motion while the cards preserve labels, mood captions, and cozy Persian-inspired flourishes.</p>
+          </div>
+        </aside>
+      </div>
+      <div class="gallery-captions">
         ${petPhotos
           .map(
             (photo) => `
-              <article class="card">
-                <div class="image-wrap">
-                  <img src="${photo.src}" alt="${photo.alt}" loading="lazy" />
-                  <span>${photo.label}</span>
-                </div>
-                <div class="card-body">
-                  <p>${photo.caption}</p>
-                </div>
+              <article class="caption-card">
+                <span>${photo.label}</span>
+                <p>${photo.caption}</p>
               </article>
             `
           )
