@@ -7,19 +7,77 @@ import image3 from '../image3.jpeg';
 import image4 from '../image4.jpeg';
 import image5 from '../image5.jpeg';
 
-type RubyPhoto = {
+type PetPhoto = {
   src: string;
   alt: string;
   caption: string;
+  label: string;
 };
 
-const rubyPhotos: RubyPhoto[] = [
-  { src: image0, alt: 'Ruby the Cat in a calm portrait pose', caption: 'Composed. Regal. Entirely in charge.' },
-  { src: image1, alt: 'Ruby the Cat close up with bright eyes', caption: 'The executive gaze behind every household decision.' },
-  { src: image2, alt: 'Ruby the Cat in a playful moment', caption: 'Playful energy with premium-level confidence.' },
-  { src: image3, alt: 'Ruby the Cat relaxing comfortably', caption: 'Quiet luxury, but make it feline.' },
-  { src: image4, alt: 'Ruby the Cat watching attentively', caption: 'Security lead and morale officer in one.' },
-  { src: image5, alt: 'Ruby the Cat posing elegantly', caption: 'A polished finish to the Ruby collection.' }
+const petPhotos: PetPhoto[] = [
+  {
+    src: image0,
+    alt: 'A peaceful companion pet resting in warm light',
+    caption: 'A soft check-in moment for a beloved household companion.',
+    label: 'Calm Visit'
+  },
+  {
+    src: image1,
+    alt: 'A bright-eyed pet looking toward the camera',
+    caption: 'Curious eyes, big feelings, and a tiny imaginary chart note.',
+    label: 'Curious Case'
+  },
+  {
+    src: image2,
+    alt: 'A playful pet enjoying a lively moment',
+    caption: 'Play is enrichment, exercise, comedy, and chaos in one package.',
+    label: 'Play Plan'
+  },
+  {
+    src: image3,
+    alt: 'A relaxed pet lounging comfortably',
+    caption: 'Rest, routine, and a cozy place to supervise the humans.',
+    label: 'Recovery Suite'
+  },
+  {
+    src: image4,
+    alt: 'An attentive pet watching from a favorite spot',
+    caption: 'Alert, observant, and probably already aware of the treat drawer.',
+    label: 'Watchful Friend'
+  },
+  {
+    src: image5,
+    alt: 'An elegant pet posing with confidence',
+    caption: 'A polished portrait from the imaginary wellness wall of fame.',
+    label: 'Portrait Round'
+  }
+];
+
+const blogPosts = [
+  {
+    title: 'Why I Love the Little Rituals',
+    date: 'Field Note 01',
+    copy:
+      'The best pet stories usually begin with tiny routines: the breakfast dance, the inspection of every grocery bag, and the dramatic sigh before a nap.'
+  },
+  {
+    title: 'A Persian-Inspired Waiting Room Playlist',
+    date: 'Field Note 02',
+    copy:
+      'Imagine santur shimmer, warm tea, pomegranate color, and a parade of pets who all believe they have urgent business behind the reception desk.'
+  },
+  {
+    title: 'For the Humans Who Worry',
+    date: 'Field Note 03',
+    copy:
+      'This playful corner is for delight, not diagnosis. When something feels off with a real pet, the kindest move is calling a licensed veterinarian.'
+  }
+];
+
+const faqPrompts = [
+  'What is the funniest habit your pet has developed?',
+  'If your pet could ask one dramatic question, what would it be?',
+  'Which snack, toy, or sunny window deserves a five-star review?'
 ];
 
 const app = document.querySelector<HTMLDivElement>('#app');
@@ -28,26 +86,55 @@ if (!app) throw new Error('App root not found');
 
 app.innerHTML = `
   <main class="site-shell">
-    <section class="hero">
-      <p class="eyebrow">Ruby the Cat • Premium Fan Archive</p>
-      <h1>Ruby the Cat</h1>
-      <p class="lead">
-        A sleek showcase for Ruby, also known as <strong>Noonie Bee</strong> and <strong>Queen Bee</strong>.
-        Built with a clean editorial aesthetic, a full photo collection, and a mini arcade experience.
-      </p>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="A Vet From Persia home">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>A Vet From Persia</span>
+      </a>
+      <div class="nav-links">
+        <a href="#gallery">Pets</a>
+        <a href="#game">Mini Game</a>
+        <a href="#blog">Blog</a>
+        <a href="#ask">Ask the Vet</a>
+        <a href="#about">About</a>
+      </div>
+    </nav>
+
+    <section id="home" class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Persian-inspired pet parlor • purely playful</p>
+        <h1>A Vet From Persia</h1>
+        <p class="lead">
+          Welcome to a jewel-toned pet gallery and mini clinic of imagination: warm patterns, tiny paws,
+          a still-silly flappy game, notes from the vet herself, and a friendly place to ask pretend questions.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#ask">Ask a playful question</a>
+          <a class="button secondary" href="#about">Read the just-for-fun disclaimer</a>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Decorative clinic card">
+        <span class="tile-icon" aria-hidden="true">🐾</span>
+        <p>Tonight's imaginary rounds</p>
+        <strong>Kindness, comedy, and pet portraits.</strong>
+      </div>
     </section>
 
-    <section class="gallery-panel" aria-label="Ruby photo gallery">
+    <section id="gallery" class="gallery-panel" aria-label="Pet photo gallery">
       <div class="section-head">
-        <h2>Photo Collection</h2>
-        <p>Every available Ruby image from the repository, presented in a unified gallery.</p>
+        <p class="kicker">Patient portraits</p>
+        <h2>Pets of the little Persian parlor</h2>
+        <p>Still starring the same repository photos, now framed as a broader collection of beloved pets and cozy companion moments.</p>
       </div>
       <div class="gallery">
-        ${rubyPhotos
+        ${petPhotos
           .map(
             (photo) => `
               <article class="card">
-                <img src="${photo.src}" alt="${photo.alt}" loading="lazy" />
+                <div class="image-wrap">
+                  <img src="${photo.src}" alt="${photo.alt}" loading="lazy" />
+                  <span>${photo.label}</span>
+                </div>
                 <div class="card-body">
                   <p>${photo.caption}</p>
                 </div>
@@ -58,15 +145,99 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="game-wrap" aria-label="Flappy Ruby mini game">
+    <section id="game" class="game-wrap" aria-label="Persian pet mini game">
       <div class="section-head game-head">
-        <h2>Flappy Ruby</h2>
-        <p>Press <kbd>Space</kbd> or click/tap the canvas to flap and avoid the treat towers.</p>
+        <p class="kicker">Arcade corner</p>
+        <h2>Flying Clinic Cat</h2>
+        <p>Press <kbd>Space</kbd> or click/tap the canvas to glide between the golden clinic columns.</p>
       </div>
-      <canvas id="flappy" width="360" height="540" aria-label="Flappy Ruby game canvas"></canvas>
+      <canvas id="flappy" width="360" height="540" aria-label="Flying Clinic Cat game canvas"></canvas>
       <div class="hud">
         <span>Score: <strong id="score">0</strong></span>
         <span>Best: <strong id="best">0</strong></span>
+      </div>
+    </section>
+
+    <section id="blog" class="blog-panel" aria-label="Vet blog">
+      <div class="section-head">
+        <p class="kicker">From the vet herself</p>
+        <h2>The tea-room blog spot</h2>
+        <p>Short fictional notes from the desk of A Vet From Persia.</p>
+      </div>
+      <div class="blog-grid">
+        ${blogPosts
+          .map(
+            (post) => `
+              <article class="blog-card">
+                <span>${post.date}</span>
+                <h3>${post.title}</h3>
+                <p>${post.copy}</p>
+              </article>
+            `
+          )
+          .join('')}
+      </div>
+    </section>
+
+    <section id="ask" class="ask-panel" aria-label="Ask the vet questions">
+      <div class="ask-copy">
+        <p class="kicker">Ask the vet</p>
+        <h2>Send a pretend question for a pretend column</h2>
+        <p>
+          Drop a lighthearted prompt for the vet character. Keep real symptoms, urgent care, dosing, diet changes,
+          injuries, and behavior concerns for your licensed veterinary professional.
+        </p>
+        <ul>
+          ${faqPrompts.map((prompt) => `<li>${prompt}</li>`).join('')}
+        </ul>
+      </div>
+      <form class="question-card">
+        <label>
+          Your name or pet's name
+          <input type="text" name="name" placeholder="Mochi, Queen Bee, or Human Friend" />
+        </label>
+        <label>
+          Playful question
+          <textarea name="question" rows="5" placeholder="Dear Vet From Persia, why does my cat judge my emails?"></textarea>
+        </label>
+        <button type="button">Save for the imaginary mailbag</button>
+      </form>
+    </section>
+
+    <section id="about" class="about-panel" aria-label="About and legal disclaimers">
+      <div class="section-head">
+        <p class="kicker">About this site</p>
+        <h2>Legal-ish statements, with extra caution</h2>
+        <p>
+          A Vet From Persia is a fictional, entertainment-only pet site. The name, blog, question box,
+          gallery captions, and game are all for fun and are not a substitute for professional care.
+        </p>
+      </div>
+      <div class="legal-grid">
+        <article>
+          <h3>No veterinary-client relationship</h3>
+          <p>Using this site, reading posts, or submitting a question does not create a veterinarian-client-patient relationship.</p>
+        </article>
+        <article>
+          <h3>Not medical advice</h3>
+          <p>Nothing here should be used to diagnose, treat, prevent, or manage any animal health condition.</p>
+        </article>
+        <article>
+          <h3>Emergencies need real help</h3>
+          <p>If a pet may be sick, injured, poisoned, in pain, or acting unusually, contact a licensed veterinarian or emergency clinic immediately.</p>
+        </article>
+        <article>
+          <h3>Content may be fictional</h3>
+          <p>Blog entries, questions, captions, names, and scenarios may be invented, exaggerated, decorative, or silly.</p>
+        </article>
+        <article>
+          <h3>No dosing or treatment reliance</h3>
+          <p>Do not use this website to decide medications, supplements, dosages, procedures, diets, or home remedies for any animal.</p>
+        </article>
+        <article>
+          <h3>Just a joyful pet corner</h3>
+          <p>The intended use is simple: enjoy the pictures, play the mini game, smile at the theme, and then call a real vet when it matters.</p>
+        </article>
       </div>
     </section>
   </main>
@@ -81,23 +252,23 @@ if (!canvas || !scoreEl || !bestEl) throw new Error('Game elements missing');
 const ctx = canvas.getContext('2d');
 if (!ctx) throw new Error('2D context unavailable');
 
-const rubySprite = new Image();
-rubySprite.src = image1;
+const petSprite = new Image();
+petSprite.src = image1;
 
 const gravity = 0.28;
 const flapForce = -5.6;
-const pipeWidth = 62;
+const columnWidth = 62;
 const gapHeight = 180;
-const pipeSpeed = 1.8;
+const columnSpeed = 1.8;
 
 let y = canvas.height / 2;
 let velocity = 0;
 let score = 0;
-let best = Number(localStorage.getItem('ruby-best') || 0);
+let best = Number(localStorage.getItem('persia-vet-best') || 0);
 bestEl.textContent = String(best);
 let alive = true;
 
-const pipes: { x: number; gapTop: number; counted: boolean }[] = [];
+const columns: { x: number; gapTop: number; counted: boolean }[] = [];
 
 const reset = () => {
   y = canvas.height / 2;
@@ -105,7 +276,7 @@ const reset = () => {
   score = 0;
   scoreEl.textContent = '0';
   alive = true;
-  pipes.length = 0;
+  columns.length = 0;
 };
 
 const flap = () => {
@@ -126,10 +297,40 @@ canvas.addEventListener('pointerdown', flap);
 
 let spawnTicker = 0;
 
+const drawBackground = () => {
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  gradient.addColorStop(0, '#fff7ed');
+  gradient.addColorStop(0.58, '#fde68a');
+  gradient.addColorStop(1, '#0f766e');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = 'rgba(127, 29, 29, 0.13)';
+  for (let i = 0; i < canvas.width; i += 48) {
+    ctx.beginPath();
+    ctx.arc(i + 12, 52, 18, 0, Math.PI * 2);
+    ctx.fill();
+  }
+};
+
+const drawColumn = (x: number, topHeight: number) => {
+  const lowerY = topHeight + gapHeight;
+  ctx.fillStyle = '#7f1d1d';
+  ctx.fillRect(x, 0, columnWidth, topHeight);
+  ctx.fillRect(x, lowerY, columnWidth, canvas.height - lowerY);
+
+  ctx.fillStyle = '#fbbf24';
+  ctx.fillRect(x - 6, topHeight - 18, columnWidth + 12, 18);
+  ctx.fillRect(x - 6, lowerY, columnWidth + 12, 18);
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+  ctx.fillRect(x + 12, 0, 8, topHeight);
+  ctx.fillRect(x + 12, lowerY, 8, canvas.height - lowerY);
+};
+
 const loop = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#f3f4f6';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawBackground();
 
   spawnTicker += 1;
   if (alive && spawnTicker > 110) {
@@ -137,38 +338,35 @@ const loop = () => {
     const minTop = 70;
     const maxTop = canvas.height - gapHeight - 70;
     const gapTop = Math.random() * (maxTop - minTop) + minTop;
-    pipes.push({ x: canvas.width, gapTop, counted: false });
+    columns.push({ x: canvas.width, gapTop, counted: false });
   }
 
-  for (let i = pipes.length - 1; i >= 0; i -= 1) {
-    const pipe = pipes[i];
-    pipe.x -= pipeSpeed;
+  for (let i = columns.length - 1; i >= 0; i -= 1) {
+    const column = columns[i];
+    column.x -= columnSpeed;
+    drawColumn(column.x, column.gapTop);
 
-    ctx.fillStyle = '#111827';
-    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.gapTop);
-    ctx.fillRect(pipe.x, pipe.gapTop + gapHeight, pipeWidth, canvas.height - (pipe.gapTop + gapHeight));
-
-    if (!pipe.counted && pipe.x + pipeWidth < 80) {
-      pipe.counted = true;
+    if (!column.counted && column.x + columnWidth < 80) {
+      column.counted = true;
       score += 1;
       scoreEl.textContent = String(score);
       if (score > best) {
         best = score;
-        localStorage.setItem('ruby-best', String(best));
+        localStorage.setItem('persia-vet-best', String(best));
         bestEl.textContent = String(best);
       }
     }
 
-    if (pipe.x + pipeWidth < 0) pipes.splice(i, 1);
+    if (column.x + columnWidth < 0) columns.splice(i, 1);
 
-    const rubyLeft = 54;
-    const rubyRight = rubyLeft + 44;
-    const rubyTop = y - 22;
-    const rubyBottom = y + 22;
+    const petLeft = 54;
+    const petRight = petLeft + 44;
+    const petTop = y - 22;
+    const petBottom = y + 22;
 
-    const withinX = rubyRight > pipe.x && rubyLeft < pipe.x + pipeWidth;
-    const hitTop = rubyTop < pipe.gapTop;
-    const hitBottom = rubyBottom > pipe.gapTop + gapHeight;
+    const withinX = petRight > column.x && petLeft < column.x + columnWidth;
+    const hitTop = petTop < column.gapTop;
+    const hitBottom = petBottom > column.gapTop + gapHeight;
 
     if (alive && withinX && (hitTop || hitBottom)) alive = false;
   }
@@ -180,33 +378,37 @@ const loop = () => {
 
   if (y > canvas.height - 24 || y < 24) alive = false;
 
-  if (rubySprite.complete) {
+  if (petSprite.complete) {
     ctx.save();
     ctx.beginPath();
     ctx.arc(78, y, 30, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(rubySprite, 46, y - 30, 64, 64);
+    ctx.drawImage(petSprite, 46, y - 30, 64, 64);
     ctx.restore();
   } else {
-    ctx.fillStyle = '#111827';
+    ctx.fillStyle = '#7f1d1d';
     ctx.beginPath();
     ctx.arc(78, y, 22, 0, Math.PI * 2);
     ctx.fill();
   }
 
+  ctx.fillStyle = '#7f1d1d';
+  ctx.font = '700 18px Inter, sans-serif';
+  ctx.fillText('✦', 74, y - 38);
+
   if (!alive) {
-    ctx.fillStyle = 'rgba(17, 24, 39, 0.68)';
+    ctx.fillStyle = 'rgba(67, 20, 7, 0.72)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
     ctx.font = '700 28px Inter, sans-serif';
-    ctx.fillText('Boop! Game Over', 88, 220);
+    ctx.fillText('Clinic Closed!', 88, 220);
     ctx.font = '500 16px Inter, sans-serif';
-    ctx.fillText('Press Space or tap to restart', 87, 255);
+    ctx.fillText('Press Space or tap to reopen', 72, 255);
   }
 
   requestAnimationFrame(loop);
 };
 
-rubySprite.onload = () => requestAnimationFrame(loop);
-if (rubySprite.complete) requestAnimationFrame(loop);
+petSprite.onload = () => requestAnimationFrame(loop);
+if (petSprite.complete) requestAnimationFrame(loop);
