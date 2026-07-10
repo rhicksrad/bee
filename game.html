@@ -45,21 +45,23 @@
         <p>Press <kbd>Space</kbd> or click/tap the canvas to glide between the golden clinic columns.</p>
       </header>
 
-      <div class="game-stage">
-        <canvas id="flappy" width="360" height="540" aria-label="Flying Clinic Cat game canvas"></canvas>
-        <div class="hud">
-          <span>Score: <strong id="score">0</strong></span>
-          <span>Best: <strong id="best">0</strong></span>
-          <button type="button" id="sound-toggle" class="sound-toggle" aria-pressed="true">Sound: On</button>
+      <div class="game-layout">
+        <div class="game-stage">
+          <canvas id="flappy" width="360" height="540" aria-label="Flying Clinic Cat game canvas"></canvas>
+          <div class="hud">
+            <span>Score: <strong id="score">0</strong></span>
+            <span>Best: <strong id="best">0</strong></span>
+            <button type="button" id="sound-toggle" class="sound-toggle" aria-pressed="true">Sound: On</button>
+          </div>
         </div>
-      </div>
 
-      <section class="leaderboard" aria-label="High scores">
-        <h2>✦ Hall of Fame ✦</h2>
-        <ol id="leaderboard-list">
-          <li class="loading-note">Polishing the trophies…</li>
-        </ol>
-      </section>
+        <section class="leaderboard" aria-label="High scores">
+          <h2>✦ Hall of Fame ✦</h2>
+          <ol id="leaderboard-list">
+            <li class="loading-note">Polishing the trophies…</li>
+          </ol>
+        </section>
+      </div>
 
       <footer class="site-footer">
         <span>✦ The Vet From Persia</span>
