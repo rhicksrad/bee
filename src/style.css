@@ -782,6 +782,136 @@ canvas#flappy {
   border-color: var(--ink-soft);
 }
 
+.leaderboard {
+  max-width: 380px;
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 1.5rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.leaderboard h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  text-align: center;
+  color: var(--pomegranate);
+}
+
+.leaderboard ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.3rem;
+  border-top: 1px solid var(--line-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.score-row .rank {
+  color: var(--gold);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.score-row .initials {
+  font-weight: 700;
+  letter-spacing: 0.35em;
+}
+
+.score-row .pts {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.score-row.is-champion .initials,
+.score-row.is-champion .pts {
+  color: var(--pomegranate);
+}
+
+.score-row.is-you {
+  background: rgba(217, 164, 65, 0.16);
+  border-radius: 6px;
+}
+
+.initials-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+}
+
+.initials-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 15, 9, 0.55);
+}
+
+.initials-card {
+  position: relative;
+  width: min(340px, 100%);
+  padding: 1.6rem 1.6rem 1.3rem;
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: 0 30px 70px rgba(26, 15, 9, 0.4);
+  text-align: center;
+}
+
+.initials-card h3 {
+  margin: 0 0 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: var(--pomegranate);
+}
+
+.initials-card p {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.initials-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-bottom: 1.1rem;
+}
+
+.initials-inputs input {
+  width: 3.1rem;
+  height: 3.8rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.initials-inputs input:focus-visible {
+  outline: 2px solid var(--pomegranate);
+  outline-offset: 1px;
+}
+
+.initials-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
 /* ---------- About & footer ---------- */
 
 .legal-grid {

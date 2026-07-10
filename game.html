@@ -54,11 +54,36 @@
         </div>
       </div>
 
+      <section class="leaderboard" aria-label="High scores">
+        <h2>✦ Hall of Fame ✦</h2>
+        <ol id="leaderboard-list">
+          <li class="loading-note">Polishing the trophies…</li>
+        </ol>
+      </section>
+
       <footer class="site-footer">
         <span>✦ The Vet From Persia</span>
         <a href="./admin.html" class="admin-link" rel="nofollow">Vet's door</a>
       </footer>
     </main>
+
+    <div class="initials-modal" id="initials-modal" hidden role="dialog" aria-label="New high score">
+      <div class="initials-backdrop"></div>
+      <form class="initials-card" id="initials-form">
+        <h3>✦ Top ten! ✦</h3>
+        <p id="initials-score-line"></p>
+        <div class="initials-inputs">
+          <input type="text" maxlength="1" autocomplete="off" autocapitalize="characters" aria-label="First initial" />
+          <input type="text" maxlength="1" autocomplete="off" autocapitalize="characters" aria-label="Second initial" />
+          <input type="text" maxlength="1" autocomplete="off" autocapitalize="characters" aria-label="Third initial" />
+        </div>
+        <div class="initials-actions">
+          <button type="submit" class="button primary">Claim your spot</button>
+          <button type="button" class="button secondary" id="initials-skip">Skip</button>
+        </div>
+        <p class="form-status" id="initials-status" role="status"></p>
+      </form>
+    </div>
 
     <script type="module" src="/src/game.ts"></script>
   </body>

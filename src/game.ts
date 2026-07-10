@@ -1,4 +1,6 @@
 import { gameSprite } from './photos';
+import { getSupabase } from './supabase';
+import { escapeHtml as esc } from './markdown';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#flappy');
 const scoreEl = document.querySelector<HTMLElement>('#score');
@@ -99,6 +101,7 @@ function reset() {
   newBest = false;
   spawnTicker = 0;
   deathTick = 0;
+  offeredThisRun = false;
   columns.length = 0;
   particles.length = 0;
   popups.length = 0;
@@ -138,13 +141,143 @@ function flap() {
   }
 }
 
+const isTypingTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+
 window.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') {
+  if (e.code === 'Space' && !isTypingTarget(e.target) && initialsModal?.hidden !== false) {
     e.preventDefault();
     flap();
   }
 });
 canvas.addEventListener('pointerdown', flap);
+
+// ---------- Leaderboard ----------
+
+const supabase = getSupabase();
+const leaderboardList = document.querySelector<HTMLOListElement>('#leaderboard-list');
+const initialsModal = document.querySelector<HTMLDivElement>('#initials-modal');
+const initialsForm = document.querySelector<HTMLFormElement>('#initials-form');
+const initialsInputs = [...document.querySelectorAll<HTMLInputElement>('.initials-inputs input')];
+const initialsStatus = document.querySelector<HTMLElement>('#initials-status');
+
+type ScoreRow = { id: string; initials: string; score: number; created_at: string };
+let topScores: ScoreRow[] = [];
+let pendingScore = 0;
+let offeredThisRun = false;
+let highlightId: string | null = null;
+
+async function loadLeaderboard() {
+  if (!leaderboardList) return;
+  if (!supabase) {
+    leaderboardList.innerHTML = '<li class="loading-note">The scoreboard opens once the site is connected.</li>';
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('scores')
+    .select('*')
+    .order('score', { ascending: false })
+    .order('created_at', { ascending: true })
+    .limit(10);
+
+  if (error) {
+    leaderboardList.innerHTML = '<li class="loading-note">The scoreboard is warming up — check back soon.</li>';
+    return;
+  }
+
+  topScores = (data ?? []) as ScoreRow[];
+  if (topScores.length === 0) {
+    leaderboardList.innerHTML = '<li class="loading-note">No champions yet — set the very first score!</li>';
+    return;
+  }
+
+  leaderboardList.innerHTML = topScores
+    .map(
+      (row, i) => `
+        <li class="score-row${row.id === highlightId ? ' is-you' : ''}${i === 0 ? ' is-champion' : ''}">
+          <span class="rank">${i + 1}</span>
+          <span class="initials">${esc(row.initials)}</span>
+          <span class="pts">${row.score}</span>
+        </li>
+      `
+    )
+    .join('');
+}
+
+function qualifiesForBoard(s: number): boolean {
+  if (!supabase || s < 1) return false;
+  if (topScores.length < 10) return true;
+  return s > topScores[topScores.length - 1].score;
+}
+
+function openInitialsModal(s: number) {
+  if (!initialsModal || !initialsStatus) return;
+  pendingScore = Math.min(s, 999);
+  const line = document.querySelector<HTMLElement>('#initials-score-line');
+  if (line) line.textContent = `You scored ${pendingScore} — enter your initials for the Hall of Fame.`;
+  initialsStatus.textContent = '';
+  const saved = (localStorage.getItem('persia-vet-initials') || '').split('');
+  initialsInputs.forEach((input, i) => (input.value = saved[i] ?? ''));
+  initialsModal.hidden = false;
+  initialsInputs[0]?.focus();
+  initialsInputs[0]?.select();
+}
+
+function closeInitialsModal() {
+  if (initialsModal) initialsModal.hidden = true;
+}
+
+initialsInputs.forEach((input, i) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 1);
+    if (input.value && i < initialsInputs.length - 1) {
+      initialsInputs[i + 1].focus();
+      initialsInputs[i + 1].select();
+    }
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !input.value && i > 0) {
+      initialsInputs[i - 1].focus();
+      initialsInputs[i - 1].select();
+    }
+  });
+});
+
+document.querySelector('#initials-skip')?.addEventListener('click', closeInitialsModal);
+
+initialsForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!supabase || !initialsStatus) return;
+
+  const initials = initialsInputs.map((input) => input.value).join('');
+  if (!/^[A-Z0-9]{3}$/.test(initials)) {
+    initialsStatus.textContent = 'Three letters or numbers, arcade style!';
+    return;
+  }
+
+  initialsStatus.textContent = 'Carving your name into the wall…';
+  const { data, error } = await supabase
+    .from('scores')
+    .insert({ initials, score: pendingScore })
+    .select()
+    .single();
+
+  if (error) {
+    initialsStatus.textContent = 'Could not save the score — try again in a moment.';
+    return;
+  }
+
+  localStorage.setItem('persia-vet-initials', initials);
+  highlightId = (data as ScoreRow).id;
+  closeInitialsModal();
+  playTone(880, 0.1, 'sine', 0.05);
+  playTone(1175, 0.14, 'sine', 0.05);
+  void loadLeaderboard();
+});
+
+void loadLeaderboard();
 
 // ---------- Drawing ----------
 
@@ -389,6 +522,10 @@ function update() {
 
   if (state === 'dead') {
     deathTick += 1;
+    if (deathTick === 35 && !offeredThisRun && qualifiesForBoard(score)) {
+      offeredThisRun = true;
+      openInitialsModal(score);
+    }
     if (y + CAT_R < H - GROUND_H) {
       velocity = Math.min(velocity + 0.4, 10);
       y += velocity;
