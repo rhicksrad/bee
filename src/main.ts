@@ -117,19 +117,18 @@ app.innerHTML = `
         <p class="eyebrow">Stories, pets, and questions answered</p>
         <h1>The Vet From Persia</h1>
         <p class="lead">
-          Welcome to the vet's own corner of the internet: real stories from her life, a jewel-toned
-          gallery of pets, answers to your questions, and one very silly flying-cat game.
+          Welcome to the vet's own corner of the internet: real stories from her life, a gallery
+          of beloved pets, answers to your questions, and one very silly flying-cat game.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#ask">Ask the vet a question</a>
           <a class="button secondary" href="#blog">Read her stories</a>
         </div>
       </div>
-      <div class="hero-card" aria-label="Decorative clinic card">
-        <span class="tile-icon" aria-hidden="true">🐾</span>
-        <p>Fresh from the vet's desk</p>
-        <strong>Stories, answers, and pet portraits.</strong>
-      </div>
+      <figure class="hero-photo">
+        <img src="${image0}" alt="One of the vet's own pets resting in warm light" />
+        <figcaption>One of the vet's own — always supervising.</figcaption>
+      </figure>
     </section>
 
     <section id="gallery" class="gallery-panel" aria-label="Pet photo gallery">
@@ -602,8 +601,17 @@ const flap = () => {
   velocity = flapForce;
 };
 
+const isTypingTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable);
+
+const isGameOnScreen = () => {
+  const rect = canvas.getBoundingClientRect();
+  return rect.bottom > 0 && rect.top < window.innerHeight;
+};
+
 window.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') {
+  if (e.code === 'Space' && !isTypingTarget(e.target) && isGameOnScreen()) {
     e.preventDefault();
     flap();
   }
