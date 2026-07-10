@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  schedule:
+    # Nightly rebuild so new stories get their static pages
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 permissions:

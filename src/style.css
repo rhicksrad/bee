@@ -1071,6 +1071,20 @@ canvas#flappy {
   border-radius: 6px;
 }
 
+.story-article {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.story-article .post-cover {
+  margin-bottom: 1.4rem;
+}
+
+.story-back {
+  margin: 2rem 0 0;
+  font-weight: 600;
+}
+
 .post-body code {
   padding: 0.1em 0.35em;
   border-radius: 4px;

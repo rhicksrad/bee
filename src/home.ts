@@ -22,7 +22,7 @@ async function loadLatestStories() {
   grid.innerHTML = (data as Post[])
     .map(
       (post) => `
-        <a class="blog-card blog-card-live" href="./stories.html?story=${encodeURIComponent(post.slug)}">
+        <a class="blog-card blog-card-live" href="./story/${encodeURIComponent(post.slug)}.html">
           ${post.cover_image_url ? `<img class="blog-card-cover" src="${esc(post.cover_image_url)}" alt="" loading="lazy" />` : ''}
           <span>${esc(formatDate(post.created_at))}</span>
           <h3>${esc(post.title)}</h3>
