@@ -252,11 +252,69 @@ kbd {
 /* ---------- Sections ---------- */
 
 .gallery-panel,
-.blog-panel {
+.blog-panel,
+.explore-panel {
   padding: clamp(2rem, 5vw, 3rem) 0 0.5rem;
   border-top: 1px solid var(--line);
   margin-top: clamp(1.5rem, 4vw, 2.5rem);
   scroll-margin-top: 4.5rem;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.explore-card {
+  display: block;
+  padding: 1.2rem 1.25rem 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.explore-card:hover,
+.explore-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(51, 36, 28, 0.12);
+}
+
+.explore-mark {
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.explore-card h3 {
+  margin: 0.4rem 0 0.45rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.explore-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.mailbag-teaser {
+  max-width: 640px;
+  margin: 1.8rem auto 0;
+  text-align: left;
+}
+
+.mailbag-teaser-label {
+  margin: 0 0 0.6rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .cta-band {
@@ -703,6 +761,24 @@ canvas#flappy {
 
 .hud strong {
   color: var(--ink);
+}
+
+.sound-toggle {
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sound-toggle:hover {
+  color: var(--ink);
+  border-color: var(--ink-soft);
 }
 
 /* ---------- About & footer ---------- */

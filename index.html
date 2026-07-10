@@ -70,14 +70,45 @@
         </figure>
       </section>
 
-      <section class="blog-panel" aria-label="Latest stories">
+      <section class="blog-panel" id="latest-stories-section" aria-label="Latest stories" hidden>
         <div class="section-head">
           <p class="kicker">From the vet herself</p>
           <h2>Latest stories</h2>
           <p>Fresh notes, memories, and tales from her life. <a href="./stories.html">Read them all →</a></p>
         </div>
-        <div class="blog-grid" id="latest-stories">
-          <p class="loading-note">The vet is warming up her pen — her first story is coming soon.</p>
+        <div class="blog-grid" id="latest-stories"></div>
+      </section>
+
+      <section class="explore-panel" aria-label="Around the parlor">
+        <div class="section-head">
+          <p class="kicker">Around the parlor</p>
+          <h2>What you'll find here</h2>
+        </div>
+        <div class="explore-grid">
+          <a class="explore-card" href="./stories.html">
+            <span class="explore-mark" aria-hidden="true">✦</span>
+            <h3>Her stories</h3>
+            <p>Real notes, memories, and tales from a veterinarian's life — written by the vet herself.</p>
+            <span class="read-more">Read the stories →</span>
+          </a>
+          <a class="explore-card" href="./ask.html">
+            <span class="explore-mark" aria-hidden="true">✦</span>
+            <h3>The mailbag</h3>
+            <p>Ask her anything fun — about her life, her pets, or Persia — and browse her answers to readers.</p>
+            <span class="read-more">Ask the vet →</span>
+          </a>
+          <a class="explore-card" href="./gallery.html">
+            <span class="explore-mark" aria-hidden="true">✦</span>
+            <h3>The pet gallery</h3>
+            <p>Portraits of the pets in her world, from regal Persians to brand-new patients.</p>
+            <span class="read-more">See the pets →</span>
+          </a>
+          <a class="explore-card" href="./game.html">
+            <span class="explore-mark" aria-hidden="true">✦</span>
+            <h3>Flying Clinic Cat</h3>
+            <p>One very silly browser game. Glide the clinic cat between the golden columns.</p>
+            <span class="read-more">Play the game →</span>
+          </a>
         </div>
       </section>
 
@@ -99,6 +130,7 @@
         <h2>Have a question for the vet?</h2>
         <p>Curious about her life, her pets, or Persia? Send it to the mailbag — it may get a personal answer in the column.</p>
         <a class="button primary" href="./ask.html">Ask the vet</a>
+        <div class="mailbag-teaser" id="mailbag-teaser" hidden></div>
       </section>
 
       <footer class="site-footer">
