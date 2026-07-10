@@ -1,5 +1,8 @@
 import './style.css';
 
+import { getSupabase, formatDate, type Post, type Question, type Photo } from './supabase';
+import { renderMarkdown, escapeHtml as esc } from './markdown';
+
 import image0 from '../image0 (2).jpeg';
 import image1 from '../image1.jpeg';
 import image2 from '../image2.jpeg';
@@ -12,95 +15,296 @@ import image8 from '../image8.jpeg';
 import image9 from '../image9.jpeg';
 import image10 from '../image10.jpeg';
 
-type PetPhoto = {
+type GalleryPhoto = {
   src: string;
   alt: string;
   caption: string;
   label: string;
-  feature: string;
 };
 
-const petPhotos: PetPhoto[] = [
+const builtInPhotos: GalleryPhoto[] = [
   {
     src: image0,
     alt: 'A peaceful companion pet resting in warm light',
     caption: 'A soft check-in moment for a beloved household companion.',
-    label: 'Calm Visit',
-    feature: 'Gentle bedside energy'
+    label: 'Calm Visit'
   },
   {
     src: image1,
     alt: 'A bright-eyed pet looking toward the camera',
     caption: 'Curious eyes, big feelings, and a tiny imaginary chart note.',
-    label: 'Curious Case',
-    feature: 'Bright-eyed intake notes'
+    label: 'Curious Case'
   },
   {
     src: image2,
     alt: 'A playful pet enjoying a lively moment',
     caption: 'Play is enrichment, exercise, comedy, and chaos in one package.',
-    label: 'Play Plan',
-    feature: 'Movement and mischief'
+    label: 'Play Plan'
   },
   {
     src: image3,
     alt: 'A relaxed pet lounging comfortably',
     caption: 'Rest, routine, and a cozy place to supervise the humans.',
-    label: 'Recovery Suite',
-    feature: 'Quiet comfort rituals'
+    label: 'Recovery Suite'
   },
   {
     src: image4,
     alt: 'An attentive pet watching from a favorite spot',
     caption: 'Alert, observant, and probably already aware of the treat drawer.',
-    label: 'Watchful Friend',
-    feature: 'Treat-drawer surveillance'
+    label: 'Watchful Friend'
   },
   {
     src: image5,
     alt: 'An elegant pet posing with confidence',
-    caption: 'A polished portrait from the imaginary wellness wall of fame.',
-    label: 'Portrait Round',
-    feature: 'Wall-of-fame polish'
+    caption: 'A polished portrait from the wellness wall of fame.',
+    label: 'Portrait Round'
   },
   {
     src: image6,
     alt: 'A beloved pet captured for the rotating parlor gallery',
     caption: 'Another little personality joins the orbit with storybook sparkle.',
-    label: 'New Arrival',
-    feature: 'Fresh patient spotlight'
+    label: 'New Arrival'
   },
   {
     src: image7,
     alt: 'A companion animal featured in a warm veterinary-inspired slideshow',
     caption: 'A bright carousel stop for soft paws, whiskers, and dramatic charm.',
-    label: 'Carousel Star',
-    feature: '3D gallery motion'
+    label: 'Carousel Star'
   },
   {
     src: image8,
     alt: 'A pet portrait added to the Persian parlor collection',
     caption: 'Jewel tones, cozy light, and a little clinic-card glamour.',
-    label: 'Jewel Tone',
-    feature: 'Persian parlor styling'
+    label: 'Jewel Tone'
   },
   {
     src: image9,
     alt: 'A household companion shown as part of the featured slideshow',
     caption: 'A sweet reminder that every pet has a signature mood and mythos.',
-    label: 'Signature Mood',
-    feature: 'Animated feature card'
+    label: 'Signature Mood'
   },
   {
     src: image10,
-    alt: 'A final pet portrait rounding out the rotating 3D gallery',
-    caption: 'The orbit closes with one more portrait from the imaginary rounds.',
-    label: 'Orbit Finale',
-    feature: 'Expanded image set'
+    alt: 'A pet portrait rounding out the rotating 3D gallery',
+    caption: 'One more portrait from the vet’s rounds.',
+    label: 'Orbit Finale'
   }
 ];
 
-const blogPosts = [
+const supabase = getSupabase();
+
+const app = document.querySelector<HTMLDivElement>('#app');
+if (!app) throw new Error('App root not found');
+
+app.innerHTML = `
+  <main class="site-shell">
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="The Vet From Persia home">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>The Vet From Persia</span>
+      </a>
+      <div class="nav-links">
+        <a href="#gallery">Pets</a>
+        <a href="#blog">Stories</a>
+        <a href="#ask">Ask the Vet</a>
+        <a href="#game">Mini Game</a>
+        <a href="#about">About</a>
+      </div>
+    </nav>
+
+    <section id="home" class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Stories, pets, and questions answered</p>
+        <h1>The Vet From Persia</h1>
+        <p class="lead">
+          Welcome to the vet's own corner of the internet: real stories from her life, a jewel-toned
+          gallery of pets, answers to your questions, and one very silly flying-cat game.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#ask">Ask the vet a question</a>
+          <a class="button secondary" href="#blog">Read her stories</a>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Decorative clinic card">
+        <span class="tile-icon" aria-hidden="true">🐾</span>
+        <p>Fresh from the vet's desk</p>
+        <strong>Stories, answers, and pet portraits.</strong>
+      </div>
+    </section>
+
+    <section id="gallery" class="gallery-panel" aria-label="Pet photo gallery">
+      <div class="section-head gallery-intro">
+        <p class="kicker">Patient portraits</p>
+        <h2>3D orbit of the little Persian parlor</h2>
+        <p>Pets from the vet's world, spinning in a rotating jewel-box carousel. Hover to pause.</p>
+      </div>
+      <div class="gallery-showcase">
+        <div class="carousel-stage" aria-label="Rotating 3D pet slideshow">
+          <div class="carousel-ring" id="carousel-ring"></div>
+        </div>
+        <aside class="gallery-features" aria-label="Gallery features">
+          <span class="feature-pill" id="photo-count-pill">11 portraits</span>
+          <span class="feature-pill">3D rotating slideshow</span>
+          <span class="feature-pill">Hover to pause</span>
+          <div class="feature-note">
+            <h3>Featured orbit notes</h3>
+            <p>New photos the vet uploads join the orbit automatically, labels, captions, and all.</p>
+          </div>
+        </aside>
+      </div>
+      <div class="gallery-captions" id="gallery-captions"></div>
+    </section>
+
+    <section id="blog" class="blog-panel" aria-label="Stories from the vet">
+      <div class="section-head">
+        <p class="kicker">From the vet herself</p>
+        <h2>Stories from her life</h2>
+        <p>Real notes, memories, and tales from The Vet From Persia.</p>
+      </div>
+      <div class="blog-grid" id="blog-grid">
+        <p class="loading-note">Fetching stories…</p>
+      </div>
+    </section>
+
+    <section id="ask" class="ask-panel" aria-label="Ask the vet questions">
+      <div class="ask-copy">
+        <p class="kicker">Ask the vet</p>
+        <h2>Send a question to the mailbag</h2>
+        <p>
+          Curious about her life, her pets, Persia, or anything fun? Drop a question below and it may get
+          a personal answer in the column. Keep real symptoms, urgent care, dosing, diet changes, injuries,
+          and behavior concerns for your own licensed veterinary professional.
+        </p>
+        <div class="qa-list" id="qa-list">
+          <p class="loading-note">Opening the mailbag…</p>
+        </div>
+      </div>
+      <form class="question-card" id="question-form">
+        <label>
+          Your name or pet's name
+          <input type="text" name="name" maxlength="80" placeholder="Mochi, Queen Bee, or Human Friend" />
+        </label>
+        <label>
+          Your question
+          <textarea name="question" rows="5" maxlength="2000" required
+            placeholder="Dear Vet From Persia, why does my cat judge my emails?"></textarea>
+        </label>
+        <button type="submit" class="button primary">Send to the mailbag</button>
+        <p class="form-status" id="question-status" role="status"></p>
+      </form>
+    </section>
+
+    <section id="game" class="game-wrap" aria-label="Persian pet mini game">
+      <div class="section-head game-head">
+        <p class="kicker">Arcade corner</p>
+        <h2>Flying Clinic Cat</h2>
+        <p>Press <kbd>Space</kbd> or click/tap the canvas to glide between the golden clinic columns.</p>
+      </div>
+      <canvas id="flappy" width="360" height="540" aria-label="Flying Clinic Cat game canvas"></canvas>
+      <div class="hud">
+        <span>Score: <strong id="score">0</strong></span>
+        <span>Best: <strong id="best">0</strong></span>
+      </div>
+    </section>
+
+    <section id="about" class="about-panel" aria-label="About and legal disclaimers">
+      <div class="section-head">
+        <p class="kicker">About this site</p>
+        <h2>The friendly fine print</h2>
+        <p>
+          The Vet From Persia is a personal blog and Q&amp;A corner. It is a place for stories and fun —
+          not a substitute for professional veterinary care.
+        </p>
+      </div>
+      <div class="legal-grid">
+        <article>
+          <h3>No veterinary-client relationship</h3>
+          <p>Using this site, reading posts, or submitting a question does not create a veterinarian-client-patient relationship.</p>
+        </article>
+        <article>
+          <h3>Not medical advice</h3>
+          <p>Nothing here should be used to diagnose, treat, prevent, or manage any animal health condition.</p>
+        </article>
+        <article>
+          <h3>Emergencies need real help</h3>
+          <p>If a pet may be sick, injured, poisoned, in pain, or acting unusually, contact a licensed veterinarian or emergency clinic immediately.</p>
+        </article>
+      </div>
+      <footer class="site-footer">
+        <span>✦ The Vet From Persia</span>
+        <a href="admin.html" class="admin-link">Vet's door</a>
+      </footer>
+    </section>
+  </main>
+
+  <div class="post-modal" id="post-modal" hidden>
+    <div class="post-modal-backdrop" data-close></div>
+    <article class="post-modal-card">
+      <button type="button" class="post-modal-close" data-close aria-label="Close story">✕</button>
+      <div id="post-modal-content"></div>
+    </article>
+  </div>
+`;
+
+// ---------- Gallery ----------
+
+function renderCarousel(photos: GalleryPhoto[]) {
+  const ring = document.querySelector<HTMLDivElement>('#carousel-ring');
+  const captions = document.querySelector<HTMLDivElement>('#gallery-captions');
+  const pill = document.querySelector<HTMLElement>('#photo-count-pill');
+  if (!ring || !captions) return;
+
+  ring.innerHTML = photos
+    .map(
+      (photo, index) => `
+        <article class="slide-card" style="--slide-index: ${index}; --slide-count: ${photos.length};">
+          <img src="${esc(photo.src)}" alt="${esc(photo.alt)}" loading="${index < 3 ? 'eager' : 'lazy'}" />
+          <div class="slide-glass">
+            <span>${esc(photo.label)}</span>
+          </div>
+        </article>
+      `
+    )
+    .join('');
+
+  captions.innerHTML = photos
+    .filter((photo) => photo.caption)
+    .map(
+      (photo) => `
+        <article class="caption-card">
+          <span>${esc(photo.label)}</span>
+          <p>${esc(photo.caption)}</p>
+        </article>
+      `
+    )
+    .join('');
+
+  if (pill) pill.textContent = `${photos.length} portraits`;
+}
+
+renderCarousel(builtInPhotos);
+
+async function loadPhotos() {
+  if (!supabase) return;
+  const { data, error } = await supabase
+    .from('photos')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error || !data || data.length === 0) return;
+
+  const uploaded: GalleryPhoto[] = (data as Photo[]).map((photo) => ({
+    src: photo.image_url,
+    alt: photo.caption || photo.label || 'A pet photo from The Vet From Persia',
+    caption: photo.caption,
+    label: photo.label || 'New Portrait'
+  }));
+  renderCarousel([...builtInPhotos, ...uploaded]);
+}
+
+// ---------- Blog ----------
+
+const fallbackPosts = [
   {
     title: 'Why I Love the Little Rituals',
     date: 'Field Note 01',
@@ -117,202 +321,198 @@ const blogPosts = [
     title: 'For the Humans Who Worry',
     date: 'Field Note 03',
     copy:
-      'This playful corner is for delight, not diagnosis. When something feels off with a real pet, the kindest move is calling a licensed veterinarian.'
+      'This corner is for delight, not diagnosis. When something feels off with a real pet, the kindest move is calling a licensed veterinarian.'
   }
 ];
 
-const faqPrompts = [
-  'What is the funniest habit your pet has developed?',
-  'If your pet could ask one dramatic question, what would it be?',
-  'Which snack, toy, or sunny window deserves a five-star review?'
-];
+function excerpt(body: string, length = 170): string {
+  const plain = body
+    .replace(/[#*`]/g, '')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return plain.length > length ? `${plain.slice(0, length).trimEnd()}…` : plain;
+}
 
-const app = document.querySelector<HTMLDivElement>('#app');
-
-if (!app) throw new Error('App root not found');
-
-app.innerHTML = `
-  <main class="site-shell">
-    <nav class="top-nav" aria-label="Primary navigation">
-      <a class="brand" href="#home" aria-label="A Vet From Persia home">
-        <span class="brand-mark" aria-hidden="true">✦</span>
-        <span>A Vet From Persia</span>
-      </a>
-      <div class="nav-links">
-        <a href="#gallery">Pets</a>
-        <a href="#game">Mini Game</a>
-        <a href="#blog">Blog</a>
-        <a href="#ask">Ask the Vet</a>
-        <a href="#about">About</a>
-      </div>
-    </nav>
-
-    <section id="home" class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Persian-inspired pet parlor • purely playful</p>
-        <h1>A Vet From Persia</h1>
-        <p class="lead">
-          Welcome to a jewel-toned pet gallery and mini clinic of imagination: warm patterns, tiny paws,
-          a still-silly flappy game, notes from the vet herself, and a friendly place to ask pretend questions.
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#ask">Ask a playful question</a>
-          <a class="button secondary" href="#about">Read the just-for-fun disclaimer</a>
-        </div>
-      </div>
-      <div class="hero-card" aria-label="Decorative clinic card">
-        <span class="tile-icon" aria-hidden="true">🐾</span>
-        <p>Tonight's imaginary rounds</p>
-        <strong>Kindness, comedy, and pet portraits.</strong>
-      </div>
-    </section>
-
-    <section id="gallery" class="gallery-panel" aria-label="Pet photo gallery">
-      <div class="section-head gallery-intro">
-        <p class="kicker">Patient portraits</p>
-        <h2>3D orbit of the little Persian parlor</h2>
-        <p>Images 6–10 now join the original root-gallery portraits in a rotating carousel with layered cards, featured traits, and jewel-box clinic styling.</p>
-      </div>
-      <div class="gallery-showcase">
-        <div class="carousel-stage" aria-label="Rotating 3D pet slideshow">
-          <div class="carousel-ring">
-            ${petPhotos
-              .map(
-                (photo, index) => `
-                  <article class="slide-card" style="--slide-index: ${index}; --slide-count: ${petPhotos.length};">
-                    <img src="${photo.src}" alt="${photo.alt}" loading="${index < 3 ? 'eager' : 'lazy'}" />
-                    <div class="slide-glass">
-                      <span>${photo.label}</span>
-                      <strong>${photo.feature}</strong>
-                    </div>
-                  </article>
-                `
-              )
-              .join('')}
-          </div>
-        </div>
-        <aside class="gallery-features" aria-label="Gallery features">
-          <span class="feature-pill">11 root images</span>
-          <span class="feature-pill">Images 6–10 integrated</span>
-          <span class="feature-pill">3D rotating slideshow</span>
-          <span class="feature-pill">Hover to pause</span>
-          <div class="feature-note">
-            <h3>Featured orbit notes</h3>
-            <p>The carousel keeps every patient portrait in motion while the cards preserve labels, mood captions, and cozy Persian-inspired flourishes.</p>
-          </div>
-        </aside>
-      </div>
-      <div class="gallery-captions">
-        ${petPhotos
-          .map(
-            (photo) => `
-              <article class="caption-card">
-                <span>${photo.label}</span>
-                <p>${photo.caption}</p>
-              </article>
-            `
-          )
-          .join('')}
-      </div>
-    </section>
-
-    <section id="game" class="game-wrap" aria-label="Persian pet mini game">
-      <div class="section-head game-head">
-        <p class="kicker">Arcade corner</p>
-        <h2>Flying Clinic Cat</h2>
-        <p>Press <kbd>Space</kbd> or click/tap the canvas to glide between the golden clinic columns.</p>
-      </div>
-      <canvas id="flappy" width="360" height="540" aria-label="Flying Clinic Cat game canvas"></canvas>
-      <div class="hud">
-        <span>Score: <strong id="score">0</strong></span>
-        <span>Best: <strong id="best">0</strong></span>
-      </div>
-    </section>
-
-    <section id="blog" class="blog-panel" aria-label="Vet blog">
-      <div class="section-head">
-        <p class="kicker">From the vet herself</p>
-        <h2>The tea-room blog spot</h2>
-        <p>Short fictional notes from the desk of A Vet From Persia.</p>
-      </div>
-      <div class="blog-grid">
-        ${blogPosts
-          .map(
-            (post) => `
-              <article class="blog-card">
-                <span>${post.date}</span>
-                <h3>${post.title}</h3>
-                <p>${post.copy}</p>
-              </article>
-            `
-          )
-          .join('')}
-      </div>
-    </section>
-
-    <section id="ask" class="ask-panel" aria-label="Ask the vet questions">
-      <div class="ask-copy">
-        <p class="kicker">Ask the vet</p>
-        <h2>Send a pretend question for a pretend column</h2>
-        <p>
-          Drop a lighthearted prompt for the vet character. Keep real symptoms, urgent care, dosing, diet changes,
-          injuries, and behavior concerns for your licensed veterinary professional.
-        </p>
-        <ul>
-          ${faqPrompts.map((prompt) => `<li>${prompt}</li>`).join('')}
-        </ul>
-      </div>
-      <form class="question-card">
-        <label>
-          Your name or pet's name
-          <input type="text" name="name" placeholder="Mochi, Queen Bee, or Human Friend" />
-        </label>
-        <label>
-          Playful question
-          <textarea name="question" rows="5" placeholder="Dear Vet From Persia, why does my cat judge my emails?"></textarea>
-        </label>
-        <button type="button">Save for the imaginary mailbag</button>
-      </form>
-    </section>
-
-    <section id="about" class="about-panel" aria-label="About and legal disclaimers">
-      <div class="section-head">
-        <p class="kicker">About this site</p>
-        <h2>Legal-ish statements, with extra caution</h2>
-        <p>
-          A Vet From Persia is a fictional, entertainment-only pet site. The name, blog, question box,
-          gallery captions, and game are all for fun and are not a substitute for professional care.
-        </p>
-      </div>
-      <div class="legal-grid">
-        <article>
-          <h3>No veterinary-client relationship</h3>
-          <p>Using this site, reading posts, or submitting a question does not create a veterinarian-client-patient relationship.</p>
+function renderFallbackPosts(grid: HTMLElement) {
+  grid.innerHTML = fallbackPosts
+    .map(
+      (post) => `
+        <article class="blog-card">
+          <span>${esc(post.date)}</span>
+          <h3>${esc(post.title)}</h3>
+          <p>${esc(post.copy)}</p>
         </article>
-        <article>
-          <h3>Not medical advice</h3>
-          <p>Nothing here should be used to diagnose, treat, prevent, or manage any animal health condition.</p>
+      `
+    )
+    .join('');
+}
+
+function openPostModal(post: Post) {
+  const modal = document.querySelector<HTMLDivElement>('#post-modal');
+  const content = document.querySelector<HTMLDivElement>('#post-modal-content');
+  if (!modal || !content) return;
+
+  content.innerHTML = `
+    ${post.cover_image_url ? `<img class="post-cover" src="${esc(post.cover_image_url)}" alt="" />` : ''}
+    <p class="kicker">${esc(formatDate(post.created_at))}</p>
+    <h2>${esc(post.title)}</h2>
+    <div class="post-body">${renderMarkdown(post.body)}</div>
+  `;
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closePostModal() {
+  const modal = document.querySelector<HTMLDivElement>('#post-modal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+}
+
+document.querySelector('#post-modal')?.addEventListener('click', (event) => {
+  if ((event.target as HTMLElement).closest('[data-close]')) closePostModal();
+});
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closePostModal();
+});
+
+async function loadPosts() {
+  const grid = document.querySelector<HTMLDivElement>('#blog-grid');
+  if (!grid) return;
+
+  if (!supabase) {
+    renderFallbackPosts(grid);
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('published', true)
+    .order('created_at', { ascending: false });
+
+  if (error || !data || data.length === 0) {
+    renderFallbackPosts(grid);
+    return;
+  }
+
+  const posts = data as Post[];
+  grid.innerHTML = posts
+    .map(
+      (post, index) => `
+        <article class="blog-card blog-card-live" data-post-index="${index}" tabindex="0" role="button"
+          aria-label="Read story: ${esc(post.title)}">
+          ${post.cover_image_url ? `<img class="blog-card-cover" src="${esc(post.cover_image_url)}" alt="" loading="lazy" />` : ''}
+          <span>${esc(formatDate(post.created_at))}</span>
+          <h3>${esc(post.title)}</h3>
+          <p>${esc(excerpt(post.body))}</p>
+          <span class="read-more">Read the full story →</span>
         </article>
-        <article>
-          <h3>Emergencies need real help</h3>
-          <p>If a pet may be sick, injured, poisoned, in pain, or acting unusually, contact a licensed veterinarian or emergency clinic immediately.</p>
+      `
+    )
+    .join('');
+
+  grid.querySelectorAll<HTMLElement>('[data-post-index]').forEach((card) => {
+    const open = () => openPostModal(posts[Number(card.dataset.postIndex)]);
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+// ---------- Q&A ----------
+
+async function loadAnsweredQuestions() {
+  const list = document.querySelector<HTMLDivElement>('#qa-list');
+  if (!list) return;
+
+  if (!supabase) {
+    list.innerHTML = '<p class="loading-note">The mailbag opens once the site is connected to its database.</p>';
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('questions')
+    .select('*')
+    .eq('status', 'answered')
+    .order('answered_at', { ascending: false })
+    .limit(20);
+
+  if (error) {
+    list.innerHTML = '<p class="loading-note">The mailbag is stuck — try again later.</p>';
+    return;
+  }
+
+  const questions = (data ?? []) as Question[];
+  if (questions.length === 0) {
+    list.innerHTML = '<p class="loading-note">No answered questions yet — yours could be the first!</p>';
+    return;
+  }
+
+  list.innerHTML = questions
+    .map(
+      (q) => `
+        <article class="qa-item">
+          <p class="qa-question"><strong>${esc(q.author_name || 'Anonymous')} asks:</strong> ${esc(q.question_text)}</p>
+          <p class="qa-answer"><span class="qa-vet">The vet answers:</span> ${esc(q.answer_text ?? '')}</p>
         </article>
-        <article>
-          <h3>Content may be fictional</h3>
-          <p>Blog entries, questions, captions, names, and scenarios may be invented, exaggerated, decorative, or silly.</p>
-        </article>
-        <article>
-          <h3>No dosing or treatment reliance</h3>
-          <p>Do not use this website to decide medications, supplements, dosages, procedures, diets, or home remedies for any animal.</p>
-        </article>
-        <article>
-          <h3>Just a joyful pet corner</h3>
-          <p>The intended use is simple: enjoy the pictures, play the mini game, smile at the theme, and then call a real vet when it matters.</p>
-        </article>
-      </div>
-    </section>
-  </main>
-`;
+      `
+    )
+    .join('');
+}
+
+function wireQuestionForm() {
+  const form = document.querySelector<HTMLFormElement>('#question-form');
+  const status = document.querySelector<HTMLElement>('#question-status');
+  if (!form || !status) return;
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!supabase) {
+      status.textContent = 'The mailbag is not connected yet — check back soon!';
+      return;
+    }
+
+    const formData = new FormData(form);
+    const name = String(formData.get('name') ?? '').trim();
+    const question = String(formData.get('question') ?? '').trim();
+    if (!question) {
+      status.textContent = 'Write a question first!';
+      return;
+    }
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (button) button.disabled = true;
+    status.textContent = 'Sending…';
+
+    const { error } = await supabase.from('questions').insert({
+      author_name: name || 'Anonymous',
+      question_text: question
+    });
+
+    if (button) button.disabled = false;
+    if (error) {
+      status.textContent = 'Something went wrong — please try again in a moment.';
+      return;
+    }
+
+    form.reset();
+    status.textContent = 'Sent! The vet will read it soon. Answered questions appear in the mailbag.';
+  });
+}
+
+void loadPhotos();
+void loadPosts();
+void loadAnsweredQuestions();
+wireQuestionForm();
+
+// ---------- Flying Clinic Cat mini game ----------
 
 const canvas = document.querySelector<HTMLCanvasElement>('#flappy');
 const scoreEl = document.querySelector<HTMLElement>('#score');
