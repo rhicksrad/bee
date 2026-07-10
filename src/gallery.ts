@@ -62,10 +62,14 @@ function renderGallery(photos: GalleryPhoto[]) {
         <figure class="photo-tile" data-photo-index="${index}" tabindex="0" role="button"
           aria-label="View photo: ${esc(photo.label || photo.alt)}">
           <img src="${esc(photo.src)}" alt="${esc(photo.alt)}" loading="${index < 4 ? 'eager' : 'lazy'}" />
-          <figcaption>
-            ${photo.label ? `<span class="tile-label">${esc(photo.label)}</span>` : ''}
-            ${photo.caption ? `<p>${esc(photo.caption)}</p>` : ''}
-          </figcaption>
+          ${
+            photo.label || photo.caption
+              ? `<figcaption>
+                  ${photo.label ? `<span class="tile-label">${esc(photo.label)}</span>` : ''}
+                  ${photo.caption ? `<p>${esc(photo.caption)}</p>` : ''}
+                </figcaption>`
+              : ''
+          }
         </figure>
       `
     )

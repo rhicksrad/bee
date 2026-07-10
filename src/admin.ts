@@ -275,6 +275,13 @@ function openPostEditor(post?: Post) {
         Story <span class="label-hint">(plain text works; **bold**, *italics*, # headings, - lists, and [links](https://…) too)</span>
         <textarea name="body" rows="12">${esc(post?.body ?? '')}</textarea>
       </label>
+      <div class="inline-photo-row">
+        <label class="button secondary upload-button">
+          📷 Add photos into the story
+          <input type="file" data-inline-photos accept="image/*" multiple hidden />
+        </label>
+        <span class="label-hint">Uploads the photo and drops it into the story right where your cursor is.</span>
+      </div>
       <label class="cover-label">
         Cover photo (optional)
         <input type="file" name="cover" accept="image/*" />
@@ -293,6 +300,30 @@ function openPostEditor(post?: Post) {
   form.querySelector('[data-action="cancel"]')?.addEventListener('click', () => {
     editor.hidden = true;
     editor.innerHTML = '';
+  });
+
+  const bodyField = form.querySelector<HTMLTextAreaElement>('textarea[name="body"]')!;
+  form.querySelector<HTMLInputElement>('[data-inline-photos]')?.addEventListener('change', async (event) => {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+    input.value = '';
+    if (files.length === 0) return;
+
+    flash(`Uploading ${files.length} photo${files.length > 1 ? 's' : ''} into the story…`);
+    const snippets: string[] = [];
+    for (const file of files) {
+      const uploaded = await uploadImage(file, 'stories');
+      if (uploaded) snippets.push(`![photo](${uploaded.url})`);
+    }
+    if (snippets.length === 0) return;
+
+    const insertion = `\n\n${snippets.join('\n\n')}\n\n`;
+    const at = bodyField.selectionStart ?? bodyField.value.length;
+    bodyField.value = bodyField.value.slice(0, at) + insertion + bodyField.value.slice(at);
+    const cursor = at + insertion.length;
+    bodyField.focus();
+    bodyField.setSelectionRange(cursor, cursor);
+    flash('Photo added to the story. ✦');
   });
 
   form.addEventListener('submit', async (event) => {

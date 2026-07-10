@@ -820,6 +820,13 @@ canvas#flappy {
   color: var(--pomegranate);
 }
 
+.post-body img {
+  display: block;
+  max-width: 100%;
+  margin: 1.1rem auto;
+  border-radius: 6px;
+}
+
 .post-body code {
   padding: 0.1em 0.35em;
   border-radius: 4px;

@@ -1,7 +1,7 @@
 // Minimal markdown renderer. All input is HTML-escaped first, so the
 // output is safe to inject even for user-submitted text. Supports:
 // # headings, **bold**, *italic*, `code`, [links](https://...),
-// - bullet lists, and blank-line paragraphs.
+// ![images](https://...), - bullet lists, and blank-line paragraphs.
 
 export function escapeHtml(text: string): string {
   return text
@@ -17,6 +17,10 @@ function renderInline(escaped: string): string {
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(
+      /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<img src="$2" alt="$1" loading="lazy" />'
+    )
     .replace(
       /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
       '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
