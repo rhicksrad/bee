@@ -61,15 +61,15 @@ const builtInPhotos: GalleryPhoto[] = [
   },
   {
     src: image6,
-    alt: 'A beloved pet captured for the rotating parlor gallery',
-    caption: 'Another little personality joins the orbit with storybook sparkle.',
+    alt: 'A beloved pet captured for the parlor gallery',
+    caption: 'Another little personality joins the gallery with storybook sparkle.',
     label: 'New Arrival'
   },
   {
     src: image7,
-    alt: 'A companion animal featured in a warm veterinary-inspired slideshow',
-    caption: 'A bright carousel stop for soft paws, whiskers, and dramatic charm.',
-    label: 'Carousel Star'
+    alt: 'A companion animal featured in a warm veterinary-inspired gallery',
+    caption: 'A bright gallery stop for soft paws, whiskers, and dramatic charm.',
+    label: 'Star Patient'
   },
   {
     src: image8,
@@ -85,9 +85,9 @@ const builtInPhotos: GalleryPhoto[] = [
   },
   {
     src: image10,
-    alt: 'A pet portrait rounding out the rotating 3D gallery',
+    alt: 'A pet portrait rounding out the gallery',
     caption: 'One more portrait from the vet’s rounds.',
-    label: 'Orbit Finale'
+    label: 'Grand Finale'
   }
 ];
 
@@ -135,24 +135,10 @@ app.innerHTML = `
     <section id="gallery" class="gallery-panel" aria-label="Pet photo gallery">
       <div class="section-head gallery-intro">
         <p class="kicker">Patient portraits</p>
-        <h2>3D orbit of the little Persian parlor</h2>
-        <p>Pets from the vet's world, spinning in a rotating jewel-box carousel. Hover to pause.</p>
+        <h2>The little Persian parlor gallery</h2>
+        <p>Pets from the vet's world. Click any portrait to see it up close.</p>
       </div>
-      <div class="gallery-showcase">
-        <div class="carousel-stage" aria-label="Rotating 3D pet slideshow">
-          <div class="carousel-ring" id="carousel-ring"></div>
-        </div>
-        <aside class="gallery-features" aria-label="Gallery features">
-          <span class="feature-pill" id="photo-count-pill">11 portraits</span>
-          <span class="feature-pill">3D rotating slideshow</span>
-          <span class="feature-pill">Hover to pause</span>
-          <div class="feature-note">
-            <h3>Featured orbit notes</h3>
-            <p>New photos the vet uploads join the orbit automatically, labels, captions, and all.</p>
-          </div>
-        </aside>
-      </div>
-      <div class="gallery-captions" id="gallery-captions"></div>
+      <div class="photo-masonry" id="photo-masonry"></div>
     </section>
 
     <section id="blog" class="blog-panel" aria-label="Stories from the vet">
@@ -244,45 +230,96 @@ app.innerHTML = `
       <div id="post-modal-content"></div>
     </article>
   </div>
+
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-label="Photo viewer">
+    <div class="lightbox-backdrop" data-lightbox-close></div>
+    <figure class="lightbox-figure">
+      <img id="lightbox-image" src="" alt="" />
+      <figcaption id="lightbox-caption"></figcaption>
+    </figure>
+    <button type="button" class="lightbox-button lightbox-close" data-lightbox-close aria-label="Close photo">✕</button>
+    <button type="button" class="lightbox-button lightbox-prev" id="lightbox-prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="lightbox-button lightbox-next" id="lightbox-next" aria-label="Next photo">›</button>
+    <span class="lightbox-counter" id="lightbox-counter"></span>
+  </div>
 `;
 
 // ---------- Gallery ----------
 
-function renderCarousel(photos: GalleryPhoto[]) {
-  const ring = document.querySelector<HTMLDivElement>('#carousel-ring');
-  const captions = document.querySelector<HTMLDivElement>('#gallery-captions');
-  const pill = document.querySelector<HTMLElement>('#photo-count-pill');
-  if (!ring || !captions) return;
+let galleryPhotos: GalleryPhoto[] = [];
+let lightboxIndex = 0;
 
-  ring.innerHTML = photos
-    .map(
-      (photo, index) => `
-        <article class="slide-card" style="--slide-index: ${index}; --slide-count: ${photos.length};">
-          <img src="${esc(photo.src)}" alt="${esc(photo.alt)}" loading="${index < 3 ? 'eager' : 'lazy'}" />
-          <div class="slide-glass">
-            <span>${esc(photo.label)}</span>
-          </div>
-        </article>
-      `
-    )
-    .join('');
+function showLightbox(index: number) {
+  const lightbox = document.querySelector<HTMLDivElement>('#lightbox');
+  const image = document.querySelector<HTMLImageElement>('#lightbox-image');
+  const caption = document.querySelector<HTMLElement>('#lightbox-caption');
+  const counter = document.querySelector<HTMLElement>('#lightbox-counter');
+  if (!lightbox || !image || !caption || !counter) return;
 
-  captions.innerHTML = photos
-    .filter((photo) => photo.caption)
-    .map(
-      (photo) => `
-        <article class="caption-card">
-          <span>${esc(photo.label)}</span>
-          <p>${esc(photo.caption)}</p>
-        </article>
-      `
-    )
-    .join('');
-
-  if (pill) pill.textContent = `${photos.length} portraits`;
+  lightboxIndex = (index + galleryPhotos.length) % galleryPhotos.length;
+  const photo = galleryPhotos[lightboxIndex];
+  image.src = photo.src;
+  image.alt = photo.alt;
+  caption.innerHTML = `
+    ${photo.label ? `<span class="tile-label">${esc(photo.label)}</span>` : ''}
+    ${photo.caption ? `<p>${esc(photo.caption)}</p>` : ''}
+  `;
+  counter.textContent = `${lightboxIndex + 1} / ${galleryPhotos.length}`;
+  lightbox.hidden = false;
+  document.body.style.overflow = 'hidden';
 }
 
-renderCarousel(builtInPhotos);
+function closeLightbox() {
+  const lightbox = document.querySelector<HTMLDivElement>('#lightbox');
+  if (!lightbox || lightbox.hidden) return;
+  lightbox.hidden = true;
+  document.body.style.overflow = '';
+}
+
+function isLightboxOpen(): boolean {
+  const lightbox = document.querySelector<HTMLDivElement>('#lightbox');
+  return !!lightbox && !lightbox.hidden;
+}
+
+document.querySelectorAll('[data-lightbox-close]').forEach((el) =>
+  el.addEventListener('click', closeLightbox)
+);
+document.querySelector('#lightbox-prev')?.addEventListener('click', () => showLightbox(lightboxIndex - 1));
+document.querySelector('#lightbox-next')?.addEventListener('click', () => showLightbox(lightboxIndex + 1));
+
+function renderGallery(photos: GalleryPhoto[]) {
+  const masonry = document.querySelector<HTMLDivElement>('#photo-masonry');
+  if (!masonry) return;
+  galleryPhotos = photos;
+
+  masonry.innerHTML = photos
+    .map(
+      (photo, index) => `
+        <figure class="photo-tile" data-photo-index="${index}" tabindex="0" role="button"
+          aria-label="View photo: ${esc(photo.label || photo.alt)}">
+          <img src="${esc(photo.src)}" alt="${esc(photo.alt)}" loading="${index < 4 ? 'eager' : 'lazy'}" />
+          <figcaption>
+            ${photo.label ? `<span class="tile-label">${esc(photo.label)}</span>` : ''}
+            ${photo.caption ? `<p>${esc(photo.caption)}</p>` : ''}
+          </figcaption>
+        </figure>
+      `
+    )
+    .join('');
+
+  masonry.querySelectorAll<HTMLElement>('[data-photo-index]').forEach((tile) => {
+    const open = () => showLightbox(Number(tile.dataset.photoIndex));
+    tile.addEventListener('click', open);
+    tile.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+renderGallery(builtInPhotos);
 
 async function loadPhotos() {
   if (!supabase) return;
@@ -299,7 +336,7 @@ async function loadPhotos() {
     caption: photo.caption,
     label: photo.label || 'New Portrait'
   }));
-  renderCarousel([...builtInPhotos, ...uploaded]);
+  renderGallery([...builtInPhotos, ...uploaded]);
 }
 
 // ---------- Blog ----------
@@ -374,7 +411,14 @@ document.querySelector('#post-modal')?.addEventListener('click', (event) => {
   if ((event.target as HTMLElement).closest('[data-close]')) closePostModal();
 });
 window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closePostModal();
+  if (event.key === 'Escape') {
+    closePostModal();
+    closeLightbox();
+  }
+  if (isLightboxOpen()) {
+    if (event.key === 'ArrowLeft') showLightbox(lightboxIndex - 1);
+    if (event.key === 'ArrowRight') showLightbox(lightboxIndex + 1);
+  }
 });
 
 async function loadPosts() {
