@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Photo Gallery | The Vet From Persia</title>
+    <meta
+      name="description"
+      content="A warm gallery of pet portraits from the world of The Vet From Persia — Persian cats, beloved companions, and new patients, each with their own story."
+    />
+    <link rel="canonical" href="https://rhicksrad.github.io/bee/gallery.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Vet From Persia" />
+    <meta property="og:title" content="Pet Photo Gallery | The Vet From Persia" />
+    <meta property="og:description" content="A warm gallery of pet portraits from the world of The Vet From Persia." />
+    <meta property="og:url" content="https://rhicksrad.github.io/bee/gallery.html" />
+    <meta property="og:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pet Photo Gallery | The Vet From Persia" />
+    <meta name="twitter:description" content="Pet portraits from the world of The Vet From Persia." />
+    <meta name="twitter:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
+    <meta name="theme-color" content="#f6efe3" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>The Vet From Persia</span>
+      </a>
+      <div class="nav-links">
+        <a href="./gallery.html" aria-current="page">Pets</a>
+        <a href="./stories.html">Stories</a>
+        <a href="./ask.html">Ask the Vet</a>
+        <a href="./game.html">Mini Game</a>
+        <a href="./about.html">About</a>
+      </div>
+    </nav>
+
+    <main class="site-shell">
+      <header class="page-head">
+        <p class="kicker">Patient portraits</p>
+        <h1>The little Persian parlor gallery</h1>
+        <p>Pets from the vet's world. Click any portrait to see it up close.</p>
+      </header>
+
+      <div class="photo-masonry" id="photo-masonry"></div>
+
+      <footer class="site-footer">
+        <span>✦ The Vet From Persia</span>
+        <a href="./admin.html" class="admin-link" rel="nofollow">Vet's door</a>
+      </footer>
+    </main>
+
+    <div class="lightbox" id="lightbox" hidden role="dialog" aria-label="Photo viewer">
+      <div class="lightbox-backdrop" data-lightbox-close></div>
+      <figure class="lightbox-figure">
+        <img id="lightbox-image" src="" alt="" />
+        <figcaption id="lightbox-caption"></figcaption>
+      </figure>
+      <button type="button" class="lightbox-button lightbox-close" data-lightbox-close aria-label="Close photo">✕</button>
+      <button type="button" class="lightbox-button lightbox-prev" id="lightbox-prev" aria-label="Previous photo">‹</button>
+      <button type="button" class="lightbox-button lightbox-next" id="lightbox-next" aria-label="Next photo">›</button>
+      <span class="lightbox-counter" id="lightbox-counter"></span>
+    </div>
+
+    <script type="module" src="/src/gallery.ts"></script>
+  </body>
+</html>

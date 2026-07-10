@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flying Clinic Cat — Mini Game | The Vet From Persia</title>
+    <meta
+      name="description"
+      content="Play Flying Clinic Cat, the free browser mini game from The Vet From Persia. Glide a cat between the golden clinic columns and set a high score."
+    />
+    <link rel="canonical" href="https://rhicksrad.github.io/bee/game.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Vet From Persia" />
+    <meta property="og:title" content="Flying Clinic Cat — Mini Game | The Vet From Persia" />
+    <meta property="og:description" content="Glide a cat between the golden clinic columns and set a high score." />
+    <meta property="og:url" content="https://rhicksrad.github.io/bee/game.html" />
+    <meta property="og:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Flying Clinic Cat — Mini Game" />
+    <meta name="twitter:description" content="A silly free browser game from The Vet From Persia." />
+    <meta name="twitter:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
+    <meta name="theme-color" content="#f6efe3" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>The Vet From Persia</span>
+      </a>
+      <div class="nav-links">
+        <a href="./gallery.html">Pets</a>
+        <a href="./stories.html">Stories</a>
+        <a href="./ask.html">Ask the Vet</a>
+        <a href="./game.html" aria-current="page">Mini Game</a>
+        <a href="./about.html">About</a>
+      </div>
+    </nav>
+
+    <main class="site-shell">
+      <header class="page-head game-head">
+        <p class="kicker">Arcade corner</p>
+        <h1>Flying Clinic Cat</h1>
+        <p>Press <kbd>Space</kbd> or click/tap the canvas to glide between the golden clinic columns.</p>
+      </header>
+
+      <div class="game-stage">
+        <canvas id="flappy" width="360" height="540" aria-label="Flying Clinic Cat game canvas"></canvas>
+        <div class="hud">
+          <span>Score: <strong id="score">0</strong></span>
+          <span>Best: <strong id="best">0</strong></span>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <span>✦ The Vet From Persia</span>
+        <a href="./admin.html" class="admin-link" rel="nofollow">Vet's door</a>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/game.ts"></script>
+  </body>
+</html>

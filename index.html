@@ -3,15 +3,124 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Vet From Persia | Stories, Pets &amp; Questions</title>
+    <title>The Vet From Persia — Pet Stories, Photos &amp; Questions Answered</title>
     <meta
       name="description"
-      content="Stories from the life of The Vet From Persia: a personal blog, pet photo gallery, reader Q&A mailbag, and a playful mini game."
+      content="Real stories from a veterinarian's life, a gallery of beloved pets, and a friendly mailbag where readers' questions get personal answers from The Vet From Persia."
     />
+    <link rel="canonical" href="https://rhicksrad.github.io/bee/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Vet From Persia" />
+    <meta property="og:title" content="The Vet From Persia — Pet Stories, Photos & Questions Answered" />
+    <meta property="og:description" content="Real stories from a veterinarian's life, a gallery of beloved pets, and a friendly mailbag where readers' questions get personal answers." />
+    <meta property="og:url" content="https://rhicksrad.github.io/bee/" />
+    <meta property="og:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Vet From Persia — Pet Stories, Photos & Questions Answered" />
+    <meta name="twitter:description" content="Stories from a vet's life, pet portraits, and answers to reader questions." />
+    <meta name="twitter:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
+    <meta name="theme-color" content="#f6efe3" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "The Vet From Persia",
+        "url": "https://rhicksrad.github.io/bee/",
+        "description": "Stories from a veterinarian's life, pet photos, and reader questions answered."
+      }
+    </script>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a class="brand" href="./" aria-current="page">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>The Vet From Persia</span>
+      </a>
+      <div class="nav-links">
+        <a href="./gallery.html">Pets</a>
+        <a href="./stories.html">Stories</a>
+        <a href="./ask.html">Ask the Vet</a>
+        <a href="./game.html">Mini Game</a>
+        <a href="./about.html">About</a>
+      </div>
+    </nav>
+
+    <main class="site-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Stories, pets, and questions answered</p>
+          <h1>The Vet From Persia</h1>
+          <p class="lead">
+            Welcome to the vet's own corner of the internet: real stories from her life, a gallery
+            of beloved pets, answers to your questions, and one very silly flying-cat game.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="./ask.html">Ask the vet a question</a>
+            <a class="button secondary" href="./stories.html">Read her stories</a>
+          </div>
+        </div>
+        <figure class="hero-photo">
+          <img src="/src/photos/photo0.jpg" alt="One of the vet's own pets resting in warm light"
+            width="1200" height="1600" fetchpriority="high" />
+          <figcaption>One of the vet's own — always supervising.</figcaption>
+        </figure>
+      </section>
+
+      <section class="blog-panel" aria-label="Latest stories">
+        <div class="section-head">
+          <p class="kicker">From the vet herself</p>
+          <h2>Latest stories</h2>
+          <p>Fresh notes, memories, and tales from her life. <a href="./stories.html">Read them all →</a></p>
+        </div>
+        <div class="blog-grid" id="latest-stories">
+          <article class="blog-card">
+            <span>Field Note 01</span>
+            <h3>Why I Love the Little Rituals</h3>
+            <p>The best pet stories usually begin with tiny routines: the breakfast dance, the inspection of every grocery bag, and the dramatic sigh before a nap.</p>
+          </article>
+          <article class="blog-card">
+            <span>Field Note 02</span>
+            <h3>A Persian-Inspired Waiting Room Playlist</h3>
+            <p>Imagine santur shimmer, warm tea, pomegranate color, and a parade of pets who all believe they have urgent business behind the reception desk.</p>
+          </article>
+          <article class="blog-card">
+            <span>Field Note 03</span>
+            <h3>For the Humans Who Worry</h3>
+            <p>This corner is for delight, not diagnosis. When something feels off with a real pet, the kindest move is calling a licensed veterinarian.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="gallery-panel" aria-label="Gallery preview">
+        <div class="section-head">
+          <p class="kicker">Patient portraits</p>
+          <h2>From the gallery</h2>
+          <p>Pets from the vet's world. <a href="./gallery.html">See the whole gallery →</a></p>
+        </div>
+        <a class="gallery-strip" href="./gallery.html" aria-label="Open the pet photo gallery">
+          <img src="/src/photos/photo5.jpg" alt="An elegant pet posing with confidence" width="1600" height="1200" loading="lazy" />
+          <img src="/src/photos/photo2.jpg" alt="A playful pet enjoying a lively moment" width="1200" height="1600" loading="lazy" />
+          <img src="/src/photos/photo4.jpg" alt="An attentive pet watching from a favorite spot" width="1600" height="1200" loading="lazy" />
+          <img src="/src/photos/photo8.jpg" alt="A pet portrait in jewel tones and cozy light" width="1200" height="1600" loading="lazy" />
+        </a>
+      </section>
+
+      <section class="cta-band" aria-label="Ask the vet">
+        <h2>Have a question for the vet?</h2>
+        <p>Curious about her life, her pets, or Persia? Send it to the mailbag — it may get a personal answer in the column.</p>
+        <a class="button primary" href="./ask.html">Ask the vet</a>
+      </section>
+
+      <footer class="site-footer">
+        <span>✦ The Vet From Persia</span>
+        <a href="./admin.html" class="admin-link" rel="nofollow">Vet's door</a>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/home.ts"></script>
   </body>
 </html>

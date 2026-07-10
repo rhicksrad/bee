@@ -1,13 +1,20 @@
 import { defineConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 
+const page = (name: string) => fileURLToPath(new URL(`./${name}.html`, import.meta.url));
+
 export default defineConfig({
   base: '/bee/',
   build: {
     rollupOptions: {
       input: {
-        main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        admin: fileURLToPath(new URL('./admin.html', import.meta.url))
+        main: page('index'),
+        gallery: page('gallery'),
+        stories: page('stories'),
+        ask: page('ask'),
+        game: page('game'),
+        about: page('about'),
+        admin: page('admin')
       }
     }
   }

@@ -1,6 +1,3 @@
-import './style.css';
-import './admin.css';
-
 import type { Session } from '@supabase/supabase-js';
 import { getSupabase, formatDate, type Post, type Question, type Photo } from './supabase';
 import { escapeHtml as esc } from './markdown';
