@@ -54,7 +54,7 @@ async function loadMailbagTeaser() {
     <p class="mailbag-teaser-label">Recently answered</p>
     <article class="qa-item">
       <p class="qa-question"><strong>${esc(q.author_name || 'Anonymous')} asks:</strong> ${esc(q.question_text)}</p>
-      <p class="qa-answer"><span class="qa-vet">The vet answers:</span> ${esc(q.answer_text ?? '')}</p>
+      <p class="qa-answer"><span class="qa-vet">She writes back:</span> ${esc(q.answer_text ?? '')}</p>
     </article>
   `;
   teaser.hidden = false;

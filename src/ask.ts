@@ -35,7 +35,7 @@ async function loadAnsweredQuestions() {
       (q) => `
         <article class="qa-item">
           <p class="qa-question"><strong>${esc(q.author_name || 'Anonymous')} asks:</strong> ${esc(q.question_text)}</p>
-          <p class="qa-answer"><span class="qa-vet">The vet answers:</span> ${esc(q.answer_text ?? '')}</p>
+          <p class="qa-answer"><span class="qa-vet">She writes back:</span> ${esc(q.answer_text ?? '')}</p>
         </article>
       `
     )
@@ -98,7 +98,7 @@ function wireQuestionForm() {
     }
 
     form.reset();
-    status.textContent = 'Sent! The vet will read it soon. Answered questions appear in the mailbag.';
+    status.textContent = 'Sent! She reads every letter. Replies appear in the mailbag.';
   });
 }
 

@@ -3,21 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ask the Vet a Question | The Vet From Persia</title>
+    <title>The Mailbag | The Vet From Persia</title>
     <meta
       name="description"
-      content="Send a question to The Vet From Persia's mailbag and browse her answers to readers — questions about her life, her pets, Persia, and everything fun. No account needed."
+      content="Write a letter to The Vet From Persia — questions about her life, her stories, her pets, and Persia, answered in the mailbag. A personal blog, not a veterinary service."
     />
     <link rel="canonical" href="https://rhicksrad.github.io/bee/ask.html" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="The Vet From Persia" />
-    <meta property="og:title" content="Ask the Vet a Question | The Vet From Persia" />
-    <meta property="og:description" content="Send a question to the vet's mailbag and browse her answers to readers. No account needed." />
+    <meta property="og:title" content="The Mailbag | The Vet From Persia" />
+    <meta property="og:description" content="Write her a letter about her life, her stories, her pets, or Persia — and read her replies to other readers." />
     <meta property="og:url" content="https://rhicksrad.github.io/bee/ask.html" />
     <meta property="og:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Ask the Vet a Question | The Vet From Persia" />
-    <meta name="twitter:description" content="Send a question to the vet's mailbag — it may get a personal answer." />
+    <meta name="twitter:title" content="The Mailbag | The Vet From Persia" />
+    <meta name="twitter:description" content="Write her a letter — it may get a personal reply in the column." />
     <meta name="twitter:image" content="https://rhicksrad.github.io/bee/social-card.jpg" />
     <meta name="theme-color" content="#f6efe3" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
@@ -32,7 +32,7 @@
       <div class="nav-links">
         <a href="./gallery.html">Pets</a>
         <a href="./stories.html">Stories</a>
-        <a href="./ask.html" aria-current="page">Ask the Vet</a>
+        <a href="./ask.html" aria-current="page">Mailbag</a>
         <a href="./game.html">Mini Game</a>
         <a href="./about.html">About</a>
       </div>
@@ -40,13 +40,18 @@
 
     <main class="site-shell">
       <header class="page-head">
-        <p class="kicker">Ask the vet</p>
-        <h1>Send a question to the mailbag</h1>
+        <p class="kicker">The mailbag</p>
+        <h1>Write her a letter</h1>
         <p>
-          Curious about her life, her pets, Persia, or anything fun? Drop a question below and it may get
-          a personal answer in the column. Keep real symptoms, urgent care, dosing, diet changes, injuries,
-          and behavior concerns for your own licensed veterinary professional.
+          Curious about her life, her stories, her pets, or Persia? Drop a letter below and it may get
+          a personal reply in the column.
         </p>
+        <aside class="mailbag-notice" role="note">
+          <strong>A note before you write:</strong> this is a personal blog, not a veterinary service.
+          She is not licensed to practice veterinary medicine in the United States, and questions about
+          an animal's health, symptoms, medications, or care will not be answered here. If you're worried
+          about a real pet, please contact a licensed veterinarian in your area.
+        </aside>
       </header>
 
       <div class="ask-layout">
@@ -62,11 +67,12 @@
             <input type="text" name="name" maxlength="80" placeholder="Mochi, Queen Bee, or Human Friend" />
           </label>
           <label>
-            Your question
+            Your letter
             <textarea name="question" rows="5" maxlength="2000" required
-              placeholder="Dear Vet From Persia, why does my cat judge my emails?"></textarea>
+              placeholder="Dear Vet From Persia, what do you miss most about home?"></textarea>
           </label>
-          <button type="submit" class="button primary">Send to the mailbag</button>
+          <p class="field-note">Please no pet-health questions — those belong with a licensed veterinarian near you.</p>
+          <button type="submit" class="button primary">Send your letter</button>
           <p class="form-status" id="question-status" role="status"></p>
         </form>
       </div>

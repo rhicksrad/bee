@@ -135,7 +135,7 @@ function storyPage(post) {
       <div class="nav-links">
         <a href="../gallery.html">Pets</a>
         <a href="../stories.html" aria-current="page">Stories</a>
-        <a href="../ask.html">Ask the Vet</a>
+        <a href="../ask.html">Mailbag</a>
         <a href="../game.html">Mini Game</a>
         <a href="../about.html">About</a>
       </div>
